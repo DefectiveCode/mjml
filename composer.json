@@ -1,0 +1,35 @@
+{
+    "name": "defectivecode/skeleton",
+    "type": "laravel",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "DefectiveCode\\Skeleton\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DefectiveCode\\Skeleton\\Tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Corey McCormick",
+            "email": "corey@defectivecode.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.3",
+        "nunomaduro/collision": "^7.0",
+        "phpunit/phpunit": "^10.0",
+        "laravel/pint": "^1.8"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}

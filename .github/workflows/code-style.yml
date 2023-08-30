@@ -1,0 +1,21 @@
+name: Code Styling
+
+on: [push, pull_request]
+
+jobs:
+    code-styling:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+              with:
+                  ref: ${{ github.head_ref }}
+
+            - run: yarn install
+
+            - name: Prettier
+              run: yarn prettier --check "{!(vendor|node_modules)/**/*,*}.{js,ts,jsx,tsx,vue,xml,json,blade.php,css,md,yml,html}"
+
+            - name: Pint
+              uses: aglipanci/laravel-pint-action@2.3.0
