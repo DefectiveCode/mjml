@@ -1,54 +1,66 @@
-<p align="center"><img width="500" src="./docs/logo.gif" alt="Defective Code Logo"></p>
+<p align="center"><img width="500" src="https://defectivecode.com/logos/logo-animated.gif" alt="Defective Code Logo"></p>
 
-<p align="center">
-    <a href="https://packagist.org/packages/defectivecode/skeleton">
-        <img src="https://poser.pugx.org/defectivecode/skeleton/d/total.svg" alt="Total Downloads">
-    </a>
-    <a href="https://packagist.org/packages/defectivecode/skeleton">
-        <img src="https://poser.pugx.org/defectivecode/skeleton/v/stable.svg" alt="Latest Stable Version">
-    </a>
-    <a href="https://packagist.org/packages/defectivecode/skeleton">
-        <img src="https://poser.pugx.org/defectivecode/skeleton/license.svg" alt="License">
-    </a>
-</p>
+[English](https://www.defectivecode.com/packages/mjml/en) |
+[العربية](https://www.defectivecode.com/packages/mjml/ar) |
+[বাংলা](https://www.defectivecode.com/packages/mjml/bn) |
+[Bosanski](https://www.defectivecode.com/packages/mjml/bs) |
+[Deutsch](https://www.defectivecode.com/packages/mjml/de) |
+[Español](https://www.defectivecode.com/packages/mjml/es) |
+[Français](https://www.defectivecode.com/packages/mjml/fr) |
+[हिन्दी](https://www.defectivecode.com/packages/mjml/hi) |
+[Italiano](https://www.defectivecode.com/packages/mjml/it) |
+[日本語](https://www.defectivecode.com/packages/mjml/ja) |
+[한국어](https://www.defectivecode.com/packages/mjml/ko) |
+[मराठी](https://www.defectivecode.com/packages/mjml/mr) |
+[Português](https://www.defectivecode.com/packages/mjml/pt) |
+[Русский](https://www.defectivecode.com/packages/mjml/ru) |
+[Kiswahili](https://www.defectivecode.com/packages/mjml/sw) |
+[தமிழ்](https://www.defectivecode.com/packages/mjml/ta) |
+[తెలుగు](https://www.defectivecode.com/packages/mjml/te) |
+[Türkçe](https://www.defectivecode.com/packages/mjml/tr) |
+[اردو](https://www.defectivecode.com/packages/mjml/ur) |
+[Tiếng Việt](https://www.defectivecode.com/packages/mjml/vi) |
+[中文](https://www.defectivecode.com/packages/mjml/zh)
 
 # Introduction
 
-...
+[MJML](https://mjml.io/) is a markup language specifically designed to simplify the process of coding responsive emails.
+Its semantic syntax ensures ease and simplicity, while its extensive library of standard components accelerates
+development and reduces the complexity of your email codebase. The open-source engine of MJML generates high-quality,
+responsive HTML that adheres to best practices. If you've experienced the frustrations of working with Outlook, this
+package is tailored for you.
+
+Our MJML implementation serves as a wrapper for the official MJML API. It enables convenient compilation of MJML into
+HTML directly within PHP, _**without the need for NodeJS**_. This package is ideal for PHP applications that wish to
+incorporate MJML without the hassle of installing NodeJS and the MJML CLI.
+
+## Example
+
+```php
+// Without Laravel
+(new MJML)->render(
+    '<mjml><mj-body><mj-section><mj-column><mj-text>Hello World</mj-text></mj-column></mj-section></mj-body></mjml>'
+);
+
+// Minified HTML
+(new MJML)->minify()->render(
+    '<mjml><mj-body><mj-section><mj-column><mj-text>Hello World</mj-text></mj-column></mj-section></mj-body></mjml>'
+);
+
+// With Laravel
+MJML::render(
+    '<mjml><mj-body><mj-section><mj-column><mj-text>Hello World</mj-text></mj-column></mj-section></mj-body></mjml>'
+);
+
+// With Laravel and minified HTML
+MJML::minify()->render(
+    '<mjml><mj-body><mj-section><mj-column><mj-text>Hello World</mj-text></mj-column></mj-section></mj-body></mjml>'
+);
+```
 
 # Documentation
 
-You may read the [documentation on our website](https://www.defectivecode.com/packages/skelton).
-
-# Support Guidelines
-
-Thanks for choosing our open source package! Please take a moment to check out these support guidelines. They'll help you get the most out of our project.
-
-## Community Driven Support
-
-Our open-source project is fueled by our awesome community. If you have questions or need assistance, StackOverflow and other online resources are your best bets.
-
-## Bugs, and Feature Prioritization
-
-The reality of managing an open-source project means we can't address every reported bug or feature request immediately. We prioritize issues in the following order:
-
-### 1. Bugs Affecting Our Paid Products
-
-Bugs that impact our paid products will always be our top priority. In some cases, we may only address bugs that affect us directly.
-
-### 2. Community Pull Requests
-
-If you've identified a bug and have a solution, please submit a pull request. After issues affecting our products, we give the next highest priority to these community-driven fixes. Once reviewed and approved, we'll merge your solution and credit your contribution.
-
-### 3. Financial Support
-
-For issues outside the mentioned categories, you can opt to fund their resolution. Each open issue is linked to an order form where you can contribute financially. We prioritize these issues based on the funding amount provided.
-
-### Community Contributions
-
-Open source thrives when its community is active. Even if you're not fixing bugs, consider contributing through code improvements, documentation updates, tutorials, or by assisting others in community channels. We highly encourage everyone, as a community, to help support open-source work.
-
-_To reiterate, DefectiveCode will prioritize bugs based on how they impact our paid products, community pull requests, and the financial support received for issues._
+You may read the [documentation on our website](https://www.defectivecode.com/packages/mjml/en).
 
 # License
 
