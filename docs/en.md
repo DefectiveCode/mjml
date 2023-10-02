@@ -60,8 +60,6 @@ MJML::minify()->render(
     | Darwin (MacOS)   | x64          | `DefectiveCode\MJML\PullBinary::darwin-x64`   |
     | Linux            | arm64        | `DefectiveCode\MJML\PullBinary::linux-arm64`  |
     | Linux            | x64          | `DefectiveCode\MJML\PullBinary::linux-x64`    |
-    | Windows          | arm64        | `DefectiveCode\MJML\PullBinary::win-arm64`    |
-    | Windows          | x64          | `DefectiveCode\MJML\PullBinary::win-x64`      |
 
 2. Next, install the PHP package by running the following composer command:
     ```bash

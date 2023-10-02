@@ -17,8 +17,6 @@ class PullBinary
         'darwin-x64',
         'linux-arm64',
         'linux-x64',
-        'win-arm64',
-        'win-x64',
     ];
 
     public static function resolveBinaryPath(string $operatingSystem, string $architecture): string
@@ -26,7 +24,7 @@ class PullBinary
         $architecture = self::resolveArchitecture($architecture);
         $operatingSystem = self::resolveOperatingSystem($operatingSystem);
 
-        return __DIR__."/../bin/mjml-{$operatingSystem}-{$architecture}".self::resolveExtension($operatingSystem);
+        return __DIR__."/../bin/mjml-{$operatingSystem}-{$architecture}";
     }
 
     public static function __callStatic(string $name, array $arguments): void
@@ -89,20 +87,11 @@ class PullBinary
 
     }
 
-    protected static function resolveExtension(string $operatingSystem): string
-    {
-        return match ($operatingSystem) {
-            'win' => '.exe',
-            default => '',
-        };
-    }
-
     protected static function resolveOperatingSystem(string $operatingSystem): string
     {
         return match (strtolower($operatingSystem)) {
             'darwin' => 'darwin',
             'linux' => 'linux',
-            'win', 'windows', 'windows nt' => 'win',
             default => throw new RuntimeException("Unsupported operating system: {$operatingSystem}"),
         };
     }

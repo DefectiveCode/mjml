@@ -2,7 +2,7 @@
 
 source .env
 
-targets=("darwin-x64" "darwin-arm64" "linux-x64" "linux-arm64" "win-x64" "win-arm64")
+targets=("darwin-x64" "darwin-arm64" "linux-x64" "linux-arm64")
 
 for target in "${targets[@]}"
 do
