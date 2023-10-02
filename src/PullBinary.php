@@ -102,7 +102,7 @@ class PullBinary
         return match (strtolower($operatingSystem)) {
             'darwin' => 'darwin',
             'linux' => 'linux',
-            'win', 'windows' => 'win',
+            'win', 'windows', 'windows nt' => 'win',
             default => throw new RuntimeException("Unsupported operating system: {$operatingSystem}"),
         };
     }
