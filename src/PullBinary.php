@@ -103,7 +103,7 @@ class PullBinary
             'darwin' => 'darwin',
             'linux' => 'linux',
             'win', 'windows' => 'win',
-            default => throw new RuntimeException('Unsupported operating system'),
+            default => throw new RuntimeException("Unsupported operating system: {$operatingSystem}"),
         };
     }
 
@@ -112,7 +112,7 @@ class PullBinary
         return match (strtolower($architecture)) {
             'arm64', 'aarch64' => 'arm64',
             'x64' => 'x64',
-            default => throw new RuntimeException('Unsupported architecture'),
+            default => throw new RuntimeException("Unsupported architecture: {$architecture}")
         };
     }
 
