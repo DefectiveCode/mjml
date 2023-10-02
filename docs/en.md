@@ -37,11 +37,12 @@ MJML::minify()->render(
 # Installation
 
 1. First add the following to your `composer.json` file to instruct our package to pull the correct binaries for your
-   operating system when our package is installed.
+   operating system when our package is installed. The binaries will download after you run `install`, `update`,
+   or `dump-autoload`.
 
     ```json
     {
-        "post-update-cmd": ["DefectiveCode\\MJML\\PullBinary::all"]
+        "post-autoload-dump": ["DefectiveCode\\MJML\\PullBinary::all"]
     }
     ```
 
