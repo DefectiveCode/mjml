@@ -61,7 +61,7 @@ class MJML
         $mjml = escapeshellarg($mjml);
         $options = escapeshellarg($this->config->toJson());
 
-        [$output, $code] = $this->exec(__DIR__."/../bin/ {$mjml} {$options}");
+        [$output, $code] = $this->exec(__DIR__."/../bin/mjml {$mjml} {$options}");
 
         if ($code > 0) {
             throw new Exception($output);

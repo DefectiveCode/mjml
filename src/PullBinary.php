@@ -10,7 +10,7 @@ class PullBinary
 {
     public const MJML_VERSION = '4.14.1';
 
-    public const BASE_DOWNLOAD_URL = 'https://defectivecode-packages.nyc3.digitaloceanspaces.com/packages/mjml/';
+    public const BASE_DOWNLOAD_URL = 'https://downloads.defectivecode.com/packages/mjml/';
 
     public static function pull(): void
     {

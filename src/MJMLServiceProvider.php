@@ -15,7 +15,7 @@ class MJMLServiceProvider extends ServiceProvider
         ]);
 
         $this->app->bind(MJML::class, function () {
-            $config = new Config(config('mjml'));
+            $config = new Config(config('mjml') ?? []);
 
             return new MJML($config);
         });

@@ -40,7 +40,14 @@ MJML::minify()->render(
     ```bash
     composer require defectivecode/mjml
     ```
-2. That's it! If using Laravel, our package will automatically install using Laravel's package discovery.
+2. Add the following to your ``within`composer.json` to automatically download the correct binary for your operating
+   system.
+    ```
+    "post-update-cmd": [
+        "DefectiveCode\\MJML\\PullBinary::pull"
+    ]
+    ```
+3. That's it! If using Laravel, our package will automatically install using Laravel's package discovery.
 
 > The precompiled MJML binary will be fetched from our CDN and stored in the bin folder of this package when composer
 > performs an install or update. Make sure to run `composer install` on your production server to ensure that the
@@ -105,7 +112,7 @@ $isValid = MJML::isValid(
 You may publish the configuration file using the following command:
 
 ```bash
-php artisan vendor:publish --provider="DefectiveCode\MJML\Providers\MJMLServiceProvider"
+php artisan vendor:publish --provider="DefectiveCode\MJML\MJMLServiceProvider"
 ```
 
 This will create a `mjml.php` configuration file in your `config` folder. All the options listed in the configuration

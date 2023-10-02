@@ -15,4 +15,3 @@ s3cmd --host https://nyc3.digitaloceanspaces.com --host-bucket "%(bucket)s.nyc3.
 
 echo "Cleaning up"
 find ./bin ! -name '.gitkeep' -type f -delete
-
