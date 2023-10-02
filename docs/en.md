@@ -36,22 +36,38 @@ MJML::minify()->render(
 
 # Installation
 
-1. First install the PHP package by running the following composer command:
+1. First add the following to your `composer.json` file to instruct our package to pull the correct binaries for your
+   operating system when our package is installed.
+
+    ```json
+    {
+        "post-update-cmd": ["DefectiveCode\\MJML\\PullBinary::all"]
+    }
+    ```
+
+    > The MJML binary will be obtained from our CDN and saved in the "bin" folder of this package during composer's
+    > installation or update. Ensure that you have the necessary binaries loaded for both your local and production
+    > environments.
+
+    By default, `all` will pull all binaries we support. We recommend scoping this down to the
+    operating and architecture systems you need to save on bandwidth and install times. The following are the available
+    binaries.
+
+    | Operating System | Architecture | Composer Post Update Command                  |
+    | ---------------- | ------------ | --------------------------------------------- |
+    | All              | All          | `DefectiveCode\MJML\PullBinary::all`          |
+    | Darwin (MacOS)   | arm64        | `DefectiveCode\MJML\PullBinary::darwin-arm64` |
+    | Darwin (MacOS)   | x64          | `DefectiveCode\MJML\PullBinary::darwin-x64`   |
+    | Linux            | arm64        | `DefectiveCode\MJML\PullBinary::linux-arm64`  |
+    | Linux            | x64          | `DefectiveCode\MJML\PullBinary::linux-x64`    |
+    | Windows          | arm64        | `DefectiveCode\MJML\PullBinary::win-arm64`    |
+    | Windows          | x64          | `DefectiveCode\MJML\PullBinary::win-x64`      |
+
+2. Next, install the PHP package by running the following composer command:
     ```bash
     composer require defectivecode/mjml
     ```
-2. Add the following to your ``within`composer.json` to automatically download the correct binary for your operating
-   system.
-    ```
-    "post-update-cmd": [
-        "DefectiveCode\\MJML\\PullBinary::pull"
-    ]
-    ```
 3. That's it! If using Laravel, our package will automatically install using Laravel's package discovery.
-
-> The precompiled MJML binary will be fetched from our CDN and stored in the bin folder of this package when composer
-> performs an install or update. Make sure to run `composer install` on your production server to ensure that the
-> appropriate binary is available for the production operating system and architecture.
 
 # Usage (Without Laravel)
 
@@ -160,7 +176,7 @@ You may change the fonts by using the following methods:
 
 ## Comments
 
-Comments are kept be default. If you wish to remove comments, you may use the `removeComments()` method.
+Comments are kept by default. If you wish to remove comments, you may use the `removeComments()` method.
 
 You may also revert the `removeComments()` by calling the `keepComments()` method.
 

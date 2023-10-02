@@ -41,9 +41,6 @@
     "scripts": {
         "post-autoload-dump": [
             "@php vendor/bin/testbench package:discover --ansi"
-        ],
-        "post-update-cmd": [
-            "DefectiveCode\\MJML\\PullBinary::pull"
         ]
     }
 }
