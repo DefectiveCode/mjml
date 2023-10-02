@@ -1,8 +1,1 @@
-blank_issues_enabled: false
-contact_links:
-    - name: Ask a question
-      url: https://github.com/:vendor_name/:package_name/discussions/new?category=q-a
-      about: Ask the community for help
-    - name: Request a feature
-      url: https://github.com/:vendor_name/:package_name/discussions/new?category=ideas
-      about: Share ideas for new features
+blank_issues_enabled: true
