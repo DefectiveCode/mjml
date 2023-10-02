@@ -23,6 +23,9 @@ class PullBinary
 
     public static function resolveBinaryPath(string $operatingSystem, string $architecture): string
     {
+        $architecture = self::resolveArchitecture($architecture);
+        $operatingSystem = self::resolveOperatingSystem($operatingSystem);
+
         return __DIR__."/../bin/mjml-{$operatingSystem}-{$architecture}".self::resolveExtension($operatingSystem);
     }
 
@@ -94,8 +97,30 @@ class PullBinary
         };
     }
 
+    protected static function resolveOperatingSystem(string $operatingSystem): string
+    {
+        return match (strtolower($operatingSystem)) {
+            'darwin' => 'darwin',
+            'linux' => 'linux',
+            'win', 'windows' => 'win',
+            default => throw new RuntimeException('Unsupported operating system'),
+        };
+    }
+
+    protected static function resolveArchitecture(string $architecture): string
+    {
+        return match (strtolower($architecture)) {
+            'arm64', 'aarch64' => 'arm64',
+            'x64' => 'x64',
+            default => throw new RuntimeException('Unsupported architecture'),
+        };
+    }
+
     protected static function resolveDownloadUrl(string $operatingSystem, string $architecture): string
     {
+        $architecture = self::resolveArchitecture($architecture);
+        $operatingSystem = self::resolveOperatingSystem($operatingSystem);
+
         return self::BASE_DOWNLOAD_URL.self::MJML_VERSION.'/'."mjml-{$operatingSystem}-{$architecture}".self::resolveExtension($operatingSystem);
     }
 }
