@@ -38,7 +38,7 @@ class PullBinary
         }
 
         if (! in_array($name, self::ALLOWED_BINARIES)) {
-            throw new RuntimeException('Unsupported binary');
+            throw new RuntimeException('Unsupported binary.');
         }
 
         self::pull(...self::extractOperatingSystemAndArchitecture($name));
@@ -110,6 +110,6 @@ class PullBinary
         $architecture = self::resolveArchitecture($architecture);
         $operatingSystem = self::resolveOperatingSystem($operatingSystem);
 
-        return self::BASE_DOWNLOAD_URL.self::MJML_VERSION.'/'."mjml-{$operatingSystem}-{$architecture}".self::resolveExtension($operatingSystem);
+        return self::BASE_DOWNLOAD_URL.self::MJML_VERSION.'/'."mjml-{$operatingSystem}-{$architecture}";
     }
 }
