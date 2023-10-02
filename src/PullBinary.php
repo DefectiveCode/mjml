@@ -100,7 +100,7 @@ class PullBinary
     {
         return match (strtolower($architecture)) {
             'arm64', 'aarch64' => 'arm64',
-            'x64', 'amd64' => 'x64',
+            'x64', 'amd64', 'x86_64' => 'x64',
             default => throw new RuntimeException("Unsupported architecture: {$architecture}")
         };
     }
