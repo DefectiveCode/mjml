@@ -9,3 +9,4 @@ node_modules
 .env
 yarn-error.log
 /bin/*
+package-lock.json

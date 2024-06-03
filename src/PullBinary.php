@@ -8,7 +8,7 @@ use RuntimeException;
 
 class PullBinary
 {
-    public const MJML_VERSION = '4.14.1';
+    public const MJML_VERSION = '4.15.3';
 
     public const BASE_DOWNLOAD_URL = 'https://downloads.defectivecode.com/packages/mjml/';
 
@@ -84,7 +84,6 @@ class PullBinary
 
         echo "Granting run permissions to {$binaryPath} binary.\n";
         chmod($binaryPath, 0755);
-
     }
 
     protected static function resolveOperatingSystem(string $operatingSystem): string
