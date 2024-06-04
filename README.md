@@ -1,4 +1,4 @@
-<p align="center"><img width="500" src="https://defectivecode.com/logos/logo-animated.gif" alt="Defective Code Logo"></p>
+<p align="center"><img width="450" src="https://defectivecode.com/logos/logo-animated.webp" alt="Defective Code Logo"></p>
 
 [English](https://www.defectivecode.com/packages/mjml/en) |
 [العربية](https://www.defectivecode.com/packages/mjml/ar) |
