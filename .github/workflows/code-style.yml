@@ -12,10 +12,10 @@ jobs:
               with:
                   ref: ${{ github.head_ref }}
 
-            - run: yarn install
+            - run: npm install
 
             - name: Prettier
-              run: yarn prettier --check "{!(vendor|node_modules)/**/*,*}.{js,ts,jsx,tsx,vue,xml,json,blade.php,css,md,yml,html}"
+              run: npx prettier --check "{!(vendor|node_modules)/**/*,*}.{js,ts,jsx,tsx,vue,xml,json,blade.php,css,md,yml,html}"
 
             - name: Pint
               uses: aglipanci/laravel-pint-action@2.4

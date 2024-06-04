@@ -22,6 +22,7 @@ class MJMLTest extends TestCase
                     </mj-column>
                 </mj-section>
             </mj-body>
+        </mjml>
     MJML;
 
     protected string $invalidMjml = '<mjml><mj-body><mj-column></mjml></mj-body>';
@@ -122,7 +123,7 @@ class MJMLTest extends TestCase
         $this->assertFalse($mjml->getConfig()->keepComments);
     }
 
-    protected function mockShellCall(Config $config = null): MockInterface
+    protected function mockShellCall(?Config $config = null): MockInterface
     {
         $mjml = $this->mock(MJML::class)
             ->makePartial()

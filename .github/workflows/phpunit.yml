@@ -9,10 +9,9 @@ jobs:
             fail-fast: true
             matrix:
                 os: [ubuntu-latest]
-                php: [8.2]
-                stability: [prefer-lowest, prefer-stable]
+                php: [8.2, 8.3]
 
-        name: P${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
+        name: P${{ matrix.php }} - ${{ matrix.os }}
 
         steps:
             - name: Checkout code
@@ -31,7 +30,7 @@ jobs:
                   echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
             - name: Install dependencies
-              run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+              run: composer update --prefer-dist --no-interaction
 
             - name: Execute tests
               run: vendor/bin/phpunit
