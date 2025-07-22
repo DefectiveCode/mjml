@@ -5,10 +5,11 @@
         "prettier-package-json": "^2.8.0"
     },
     "dependencies": {
-        "@yao-pkg/pkg": "^5.11.5",
+        "@yao-pkg/pkg": "^6.5.1",
         "html-minifier-terser": "^7.2.0",
         "js-beautify": "^1.14.9",
         "lodash": "^4.17.21",
+        "lodash-es": "^4.17.21",
         "mjml": "4.15.3",
         "snakecase": "^1.0.0"
     },
