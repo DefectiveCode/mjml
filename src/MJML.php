@@ -91,10 +91,12 @@ class MJML
     {
         $binary = PullBinary::resolveBinaryPath(php_uname('s'), php_uname('m'));
 
-        exec("{$binary} {$arguments}", $output, $code);
+        $output = tempnam(sys_get_temp_dir(), 'mjml_output');
+
+        exec("{$binary} {$arguments} > {$output} 2>&1", result_code: $code);
 
         return [
-            implode("\n", $output),
+            file_get_contents($output),
             $code,
         ];
     }
