@@ -1,12 +1,17 @@
 #!/bin/bash
 
 source .env
-targets=("darwin-x64" "darwin-arm64" "linux-x64" "linux-arm64")
+targets=("darwin-x64" "darwin-arm64" "linuxstatic-x64" "linuxstatic-arm64")
 
 for target in "${targets[@]}"
 do
-  echo "Building: $target"
-  npx pkg --target=node20-"$target" ./build/mjml.js --compress=Brotli --output=./bin/mjml-"$target"
+  case "$target" in
+      linuxstatic-x64)    filename="mjml-linux-x64"    ;;
+      linuxstatic-arm64)  filename="mjml-linux-arm64"  ;;
+      *)                  filename="mjml-$target"    ;;
+  esac
+  echo "Building: $target ($filename)"
+  npx pkg --target=node20-"$target" ./build/mjml.js --compress=Brotli --output=./bin/"$filename"
 done
 
 echo "Signing MacOS ARM64 binary."
