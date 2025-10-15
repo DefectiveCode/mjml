@@ -8,7 +8,7 @@ use RuntimeException;
 
 class PullBinary
 {
-    public const MJML_VERSION = '4.15.3';
+    public const MJML_VERSION = '4.16.1';
 
     public const BASE_DOWNLOAD_URL = 'https://downloads.defectivecode.com/packages/mjml/';
 

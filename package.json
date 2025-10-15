@@ -10,7 +10,7 @@
         "js-beautify": "^1.14.9",
         "lodash": "^4.17.21",
         "lodash-es": "^4.17.21",
-        "mjml": "4.15.3",
+        "mjml": "4.16.1",
         "snakecase": "^1.0.0"
     },
     "name": "mjml"
