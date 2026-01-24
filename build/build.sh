@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Prompt for version
+read -p "Enter version for this release: " VERSION
+if [ -z "$VERSION" ]; then
+    echo "Error: Version cannot be empty"
+    exit 1
+fi
+
+# Write version to VERSION file
+echo "$VERSION" > ./VERSION
+echo "Version set to: $VERSION"
+
 source .env
 targets=("darwin-x64" "darwin-arm64" "linuxstatic-x64" "linuxstatic-arm64")
 
