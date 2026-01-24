@@ -3,5 +3,5 @@
     "trailingComma": "es5",
     "tabWidth": 4,
     "singleQuote": true,
-    "plugins": ["@prettier/plugin-xml"]
+    "plugins": ["@prettier/plugin-xml", "prettier-plugin-packagejson"]
 }
