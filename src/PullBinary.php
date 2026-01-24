@@ -8,11 +8,9 @@ use RuntimeException;
 
 class PullBinary
 {
-    public const MJML_VERSION = '4.18.0';
+    public const string BASE_DOWNLOAD_URL = 'https://downloads.defectivecode.com/packages/mjml/';
 
-    public const BASE_DOWNLOAD_URL = 'https://downloads.defectivecode.com/packages/mjml/';
-
-    public const ALLOWED_BINARIES = [
+    public const array ALLOWED_BINARIES = [
         'darwin-arm64',
         'darwin-x64',
         'linux-arm64',
@@ -109,6 +107,17 @@ class PullBinary
         $architecture = self::resolveArchitecture($architecture);
         $operatingSystem = self::resolveOperatingSystem($operatingSystem);
 
-        return self::BASE_DOWNLOAD_URL.self::MJML_VERSION.'/'."mjml-{$operatingSystem}-{$architecture}";
+        return self::BASE_DOWNLOAD_URL.self::getVersion().'/'."mjml-{$operatingSystem}-{$architecture}";
+    }
+
+    public static function getVersion(): string
+    {
+        $versionFile = __DIR__.'/../VERSION';
+
+        if (! file_exists($versionFile)) {
+            throw new RuntimeException('VERSION file not found.');
+        }
+
+        return trim(file_get_contents($versionFile));
     }
 }
