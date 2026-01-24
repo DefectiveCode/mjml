@@ -13,9 +13,6 @@ use BadMethodCallException;
  * @method Config addBeautifyOption(string $option, mixed $value)
  * @method Config removeBeautifyOption(string $option)
  * @method Config setBeautifyOptions(array $options)
- * @method Config addMinifyOption(string $option, mixed $value)
- * @method Config removeMinifyOption(string $option)
- * @method Config setMinifyOptions(array $options)
  * @method Config addJuiceOption(string $option, mixed $value)
  * @method Config removeJuiceOption(string $option)
  * @method Config setJuiceOptions(array $options)
@@ -48,13 +45,6 @@ class Config
 
     public bool $minify = false;
 
-    public array $minifyOptions = [
-        'collapseWhitespace' => true,
-        'minifyCSS' => false,
-        'caseSensitive' => true,
-        'removeEmptyAttributes' => true,
-    ];
-
     public ValidationLevel $validationLevel;
 
     public string $filePath = '.';
@@ -83,7 +73,6 @@ class Config
             'beautify' => $this->beautify,
             'beautifyOptions' => $this->beautifyOptions,
             'minify' => $this->minify,
-            'minifyOptions' => $this->minifyOptions,
             'validationLevel' => $this->validationLevel->value,
             'filePath' => $this->filePath,
             'juiceOptions' => $this->juiceOptions,

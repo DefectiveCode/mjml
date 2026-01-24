@@ -12,10 +12,13 @@ jobs:
               with:
                   ref: ${{ github.head_ref }}
 
-            - run: npm install
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+
+            - run: bun install
 
             - name: Prettier
-              run: npx prettier --check "{!(vendor|node_modules)/**/*,*}.{js,ts,jsx,tsx,vue,xml,json,blade.php,css,md,yml,html}"
+              run: bunx prettier --check "{!(vendor|node_modules)/**/*,*}.{js,ts,jsx,tsx,vue,xml,json,blade.php,css,md,yml,html}"
 
             - name: Pint
               uses: aglipanci/laravel-pint-action@2.6

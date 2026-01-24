@@ -14,9 +14,6 @@ use Illuminate\Support\Traits\ForwardsCalls;
  * @method MJML addBeautifyOption(string $option, mixed $value)
  * @method MJML removeBeautifyOption(string $option)
  * @method MJML setBeautifyOptions(array $options)
- * @method MJML addMinifyOption(string $option, mixed $value)
- * @method MJML removeMinifyOption(string $option)
- * @method MJML setMinifyOptions(array $options)
  * @method MJML addJuiceOption(string $option, mixed $value)
  * @method MJML removeJuiceOption(string $option)
  * @method MJML setJuiceOptions(array $options)
@@ -67,7 +64,20 @@ class MJML
             throw new Exception($output);
         }
 
+        if ($this->config->minify) {
+            $output = $this->minifyHtml($output);
+        }
+
         return $output;
+    }
+
+    protected function minifyHtml(string $html): string
+    {
+        $html = preg_replace('/<!--(?![<\[])(?!.*?(?:\[if|endif)).*?-->/s', '', $html);
+        $html = preg_replace('/\s+/', ' ', $html);
+        $html = preg_replace('/>\s+</', '><', $html);
+
+        return trim($html);
     }
 
     public function getConfig(): Config

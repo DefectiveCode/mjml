@@ -140,9 +140,8 @@ class PullBinaryTest extends TestCase
         $url = $method->invoke(null, 'linux', 'amd64');
 
         $version = PullBinary::getVersion();
-        $expectedUrl = PullBinary::BASE_DOWNLOAD_URL.$version.'/mjml-linux-x64';
 
-        $this->assertEquals($expectedUrl, $url);
+        $this->assertStringStartsWith(PullBinary::BASE_DOWNLOAD_URL.$version.'/mjml-linux-x64', $url);
     }
 
     #[Test]
@@ -152,7 +151,9 @@ class PullBinaryTest extends TestCase
             'darwin-arm64',
             'darwin-x64',
             'linux-arm64',
+            'linux-arm64-musl',
             'linux-x64',
+            'linux-x64-musl',
         ];
 
         $this->assertEquals($expected, PullBinary::ALLOWED_BINARIES);
@@ -177,12 +178,34 @@ class PullBinaryTest extends TestCase
     }
 
     #[Test]
-    public function itExtractsOperatingSystemAndArchitecture(): void
+    #[DataProvider('binaryPartsProvider')]
+    public function itExtractsBinaryParts(string $binary, array $expected): void
     {
-        $method = $this->getProtectedMethod('extractOperatingSystemAndArchitecture');
-        $result = $method->invoke(null, 'darwin-arm64');
+        $method = $this->getProtectedMethod('extractBinaryParts');
+        $result = $method->invoke(null, $binary);
 
-        $this->assertEquals(['darwin', 'arm64'], $result);
+        $this->assertEquals($expected, $result);
+    }
+
+    public static function binaryPartsProvider(): array
+    {
+        return [
+            'darwin-arm64' => ['darwin-arm64', ['darwin', 'arm64', 'glibc']],
+            'darwin-x64' => ['darwin-x64', ['darwin', 'x64', 'glibc']],
+            'linux-arm64' => ['linux-arm64', ['linux', 'arm64', 'glibc']],
+            'linux-x64' => ['linux-x64', ['linux', 'x64', 'glibc']],
+            'linux-arm64-musl' => ['linux-arm64-musl', ['linux', 'arm64', 'musl']],
+            'linux-x64-musl' => ['linux-x64-musl', ['linux', 'x64', 'musl']],
+        ];
+    }
+
+    #[Test]
+    public function itResolvesLibcForDarwin(): void
+    {
+        $method = $this->getProtectedMethod('resolveLibc');
+        $result = $method->invoke(null, 'darwin');
+
+        $this->assertEquals('glibc', $result);
     }
 
     protected function getProtectedMethod(string $methodName): \ReflectionMethod

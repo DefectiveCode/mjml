@@ -41,20 +41,11 @@ return [
     ],
 
     /**
-     * Enable or disable minification of the html using html-minifier-terser.
+     * Enable or disable minification of the HTML output.
+     * Minification removes comments (except Outlook conditionals), collapses whitespace,
+     * and removes whitespace between tags.
      */
     'minify' => true,
-
-    /**
-     * The options past to html-minifier-terser.
-     * See https://www.npmjs.com/package/html-minifier-terser for a list of all the supported options.
-     */
-    'minify_options' => [
-        'collapseWhitespace' => true,
-        'minifyCSS' => false,
-        'caseSensitive' => true,
-        'removeEmptyAttributes' => true,
-    ],
 
     /**
      * The validation level to use. See https://github.com/mjmlio/mjml/tree/master/packages/mjml-validator#validating-mjml
