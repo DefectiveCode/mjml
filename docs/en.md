@@ -151,27 +151,27 @@ $html = (new MJML)
 Our package follows the [same configuration](https://github.com/mjmlio/mjml/tree/master) as the official MJML package
 except for the following:
 
--   `preprocessors` - This option is not available. Please open a pull request if you would like to add this option.
--   `minifyOptions` - We use `html-minifier-terser` while the official package uses `html-minifier` for minification. We
-    decided to switch the processor because `html-minifer` is no longer maintained and has a few security issues associate
-    with it.
+- `preprocessors` - This option is not available. Please open a pull request if you would like to add this option.
+- `minifyOptions` - We use `html-minifier-terser` while the official package uses `html-minifier` for minification. We
+  decided to switch the processor because `html-minifer` is no longer maintained and has a few security issues associate
+  with it.
 
 ## Fonts
 
 Our package uses the following fonts by default:
 
--   Open Sans: 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700
--   Droid Sans: 'https://fonts.googleapis.com/css?family=Droid+Sans:300,400,500,700
--   Lato: https://fonts.googleapis.com/css?family=Lato:300,400,500,700
--   Roboto: https://fonts.googleapis.com/css?family=Roboto:300,400,500,700
--   Ubuntu: https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700
+- Open Sans: 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700
+- Droid Sans: 'https://fonts.googleapis.com/css?family=Droid+Sans:300,400,500,700
+- Lato: https://fonts.googleapis.com/css?family=Lato:300,400,500,700
+- Roboto: https://fonts.googleapis.com/css?family=Roboto:300,400,500,700
+- Ubuntu: https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700
 
 You may change the fonts by using the following methods:
 
--   `addFont(string $font, string $url)` - Add a font to the list of fonts.
--   `removeFont(string$font)` - Remove a font from the list of fonts.
--   `setFonts(array $fonts)` - Set the list of fonts. You should provide an array of fonts in this
-    format: `['font-name' => 'font-url']`.
+- `addFont(string $font, string $url)` - Add a font to the list of fonts.
+- `removeFont(string$font)` - Remove a font from the list of fonts.
+- `setFonts(array $fonts)` - Set the list of fonts. You should provide an array of fonts in this
+  format: `['font-name' => 'font-url']`.
 
 ## Comments
 
@@ -189,10 +189,10 @@ this behavior by calling the `ignoreIncludes(bool $ignore)` method.
 Our package will beautify the HTML using [`js-beautify`](https://www.npmjs.com/package/js-beautify) with the following
 default options:
 
--   indentSize: 2
--   wrapAttributesIndentSize: 2
--   maxPreserveNewline: 0
--   preserveNewlines: false
+- indentSize: 2
+- wrapAttributesIndentSize: 2
+- maxPreserveNewline: 0
+- preserveNewlines: false
 
 > While `js-beautify` uses snake_case to provide options, you should use camelCase when using our package. We made this
 > choice to keep our package consistent with the rest of the configuration options. Our package will automatically
@@ -200,36 +200,36 @@ default options:
 
 You may override any of these options by providing a valid `js-beautify` configuration using the following methods:
 
--   `setBeautifyOptions(array $options)` - Set the `js-beautify` options.
--   `addBeautifyOption(string $option, mixed $value)` - Adds a `js-beautify` option.
--   `removeBeautifyOption(string $option)` - Removes a `js-beautify` option.
+- `setBeautifyOptions(array $options)` - Set the `js-beautify` options.
+- `addBeautifyOption(string $option, mixed $value)` - Adds a `js-beautify` option.
+- `removeBeautifyOption(string $option)` - Removes a `js-beautify` option.
 
 ## Minify
 
 Our package will minify the HTML using [`html-minifier-terser`](https://www.npmjs.com/package/html-minifier-terser) with
 the following default options:
 
--   collapseWhitespace: true
--   minifyCSS: false
--   caseSensitive: true
--   removeEmptyAttributes: true
+- collapseWhitespace: true
+- minifyCSS: false
+- caseSensitive: true
+- removeEmptyAttributes: true
 
 You may override any of these options by providing a
 valid [`html-minifier-terser`](https://www.npmjs.com/package/html-minifier-terser) configuration using the following
 methods:
 
--   `setMinifyOptions(array $options)` - Set the `html-minifier-terser` options.
--   `addMinifyOption(string $option, mixed $value)` - Adds a `html-minifier-terser` option.
--   `removeMinifyOption(string $option)` - Removes a `html-minifier-terser` option.
+- `setMinifyOptions(array $options)` - Set the `html-minifier-terser` options.
+- `addMinifyOption(string $option, mixed $value)` - Adds a `html-minifier-terser` option.
+- `removeMinifyOption(string $option)` - Removes a `html-minifier-terser` option.
 
 ## Validation Level
 
 Our package will validate the MJML using the `soft` validation level by default. You may change this by using the
 `validationLevel(ValidationLevel $validationLevel)` method. The following validation levels are available:
 
--   `strict` - Your document is going through validation and is not rendered if it has any error
--   `soft` - Your document is going through validation and is rendered, even if it has errors
--   `skip` - Your document is rendered without going through validation.
+- `strict` - Your document is going through validation and is not rendered if it has any error
+- `soft` - Your document is going through validation and is rendered, even if it has errors
+- `skip` - Your document is rendered without going through validation.
 
 ## File Path
 
@@ -241,9 +241,9 @@ method.
 We do not provide any [juice options](https://www.npmjs.com/package/juice) by default. You may add juice options by
 using the following methods:
 
--   `setJuiceOptions(array $options)` - Set the juice options.
--   `addJuiceOption(string $option, mixed $value)` - Adds a juice option.
--   `removeJuiceOption(string $option)` - Removes a juice option.
--   `setJuicePreserveTags(array $tags)` - Set the juice preserve tags.
--   `addJuicePreserveTag(string $tag, mixed $value)` - Adds a juice preserve tag.
--   `removeJuicePreserveTag(string $tag)` - Removes a juice preserve tag.
+- `setJuiceOptions(array $options)` - Set the juice options.
+- `addJuiceOption(string $option, mixed $value)` - Adds a juice option.
+- `removeJuiceOption(string $option)` - Removes a juice option.
+- `setJuicePreserveTags(array $tags)` - Set the juice preserve tags.
+- `addJuicePreserveTag(string $tag, mixed $value)` - Adds a juice preserve tag.
+- `removeJuicePreserveTag(string $tag)` - Removes a juice preserve tag.

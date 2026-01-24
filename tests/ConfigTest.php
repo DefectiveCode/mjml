@@ -6,11 +6,12 @@ namespace DefectiveCode\MJML\Tests;
 
 use BadMethodCallException;
 use DefectiveCode\MJML\Config;
+use PHPUnit\Framework\Attributes\Test;
 use DefectiveCode\MJML\ValidationLevel;
 
 class ConfigTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function itSetsThePropertiesFromAnArray(): void
     {
         $arrayConfig = [
@@ -24,49 +25,49 @@ class ConfigTest extends TestCase
         $this->assertTrue($config->ignoreIncludes);
     }
 
-    /** @test */
+    #[Test]
     public function itReturnsAJsonObjectOfTheConfig(): void
     {
         $this->assertEquals(
             '{"fonts":{"Open Sans":"https:\/\/fonts.googleapis.com\/css?family=Open+Sans:300,400,500,700","Droid Sans":"https:\/\/fonts.googleapis.com\/css?family=Droid+Sans:300,400,500,700","Lato":"https:\/\/fonts.googleapis.com\/css?family=Lato:300,400,500,700","Roboto":"https:\/\/fonts.googleapis.com\/css?family=Roboto:300,400,500,700","Ubuntu":"https:\/\/fonts.googleapis.com\/css?family=Ubuntu:300,400,500,700"},"keepComments":true,"ignoreIncludes":false,"beautify":false,"beautifyOptions":{"indentSize":2,"wrapAttributesIndentSize":2,"maxPreserveNewline":0,"preserveNewlines":false},"minify":false,"minifyOptions":{"collapseWhitespace":true,"minifyCSS":false,"caseSensitive":true,"removeEmptyAttributes":true},"validationLevel":"soft","filePath":".","juiceOptions":[],"juicePreserveTags":[]}',
-            (new Config())->toJson()
+            (new Config)->toJson()
         );
     }
 
-    /** @test */
+    #[Test]
     public function itSetsKeepsComments(): void
     {
         $this->assertTrue((new Config)->keepComments()->keepComments);
     }
 
-    /** @test */
+    #[Test]
     public function itSetsRemovesComments(): void
     {
         $this->assertFalse((new Config)->removeComments()->keepComments);
     }
 
-    /** @test */
+    #[Test]
     public function itSetsIgnoresIncludes(): void
     {
         $this->assertTrue((new Config)->ignoreIncludes()->ignoreIncludes);
         $this->assertFalse((new Config)->ignoreIncludes(false)->ignoreIncludes);
     }
 
-    /** @test */
+    #[Test]
     public function itSetsBeautify(): void
     {
         $this->assertTrue((new Config)->beautify()->beautify);
         $this->assertFalse((new Config)->beautify(false)->beautify);
     }
 
-    /** @test */
+    #[Test]
     public function itSetsMinify(): void
     {
         $this->assertTrue((new Config)->minify()->minify);
         $this->assertFalse((new Config)->minify(false)->minify);
     }
 
-    /** @test */
+    #[Test]
     public function itSetsTheValidationLevel(): void
     {
         $this->assertEquals(
@@ -85,7 +86,7 @@ class ConfigTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function itSetsTheFilePath(): void
     {
         $this->assertEquals(
@@ -94,7 +95,7 @@ class ConfigTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function itSetsTheOptionsOnTheCorrectProperty(): void
     {
         $fonts = [
@@ -107,7 +108,7 @@ class ConfigTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function itAddsAnOptionOnTheCorrectProperty(): void
     {
         $this->assertEquals(
@@ -116,7 +117,7 @@ class ConfigTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function itRemovesAnOptionFromTheCorrectProperty(): void
     {
         $this->assertFalse(
@@ -124,7 +125,7 @@ class ConfigTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function itThrowsAnExceptionIfThePropertyDoesntExist(): void
     {
         $this->expectException(BadMethodCallException::class);

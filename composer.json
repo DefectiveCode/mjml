@@ -1,5 +1,6 @@
 {
     "name": "defectivecode/mjml",
+    "description": "Compile MJML to responsive HTML emails directly in PHP without requiring Node.js. Wraps the official MJML engine with full Laravel integration.",
     "type": "laravel",
     "license": "MIT",
     "autoload": {
@@ -19,14 +20,14 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.4",
         "illuminate/support": "*"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.3",
-        "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.0",
-        "laravel/pint": "^1.8"
+        "orchestra/testbench": "^10.0",
+        "nunomaduro/collision": "^8.8",
+        "phpunit/phpunit": "^12.0",
+        "laravel/pint": "^1.25"
     },
     "extra": {
         "laravel": {

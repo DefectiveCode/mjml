@@ -8,6 +8,7 @@ use Exception;
 use Mockery\MockInterface;
 use DefectiveCode\MJML\MJML;
 use DefectiveCode\MJML\Config;
+use PHPUnit\Framework\Attributes\Test;
 
 class MJMLTest extends TestCase
 {
@@ -27,7 +28,7 @@ class MJMLTest extends TestCase
 
     protected string $invalidMjml = '<mjml><mj-body><mj-column></mjml></mj-body>';
 
-    /** @test */
+    #[Test]
     public function itPassesTheMjmlToTheMJMLBinary(): void
     {
         $mjml = $this->mockShellCall();
@@ -45,7 +46,7 @@ class MJMLTest extends TestCase
         $mjml->render($this->validMjml);
     }
 
-    /** @test */
+    #[Test]
     public function itPassesTheConfigToTheMJMLBinary(): void
     {
         $mjml = $this->mockShellCall();
@@ -53,7 +54,7 @@ class MJMLTest extends TestCase
         $mjml->shouldReceive('exec')
             ->once()
             ->withArgs(function ($args): bool {
-                return str_contains($args, (new Config())->toJson());
+                return str_contains($args, (new Config)->toJson());
             })
             ->andReturn([
                 '<html></html>',
@@ -63,7 +64,7 @@ class MJMLTest extends TestCase
         $mjml->render($this->validMjml);
     }
 
-    /** @test */
+    #[Test]
     public function itThrowsAnExceptionIfExitCodeIsGreaterThan0(): void
     {
         $this->expectException(Exception::class);
@@ -73,7 +74,7 @@ class MJMLTest extends TestCase
         $mjml->shouldReceive('exec')
             ->once()
             ->withArgs(function ($args): bool {
-                return str_contains($args, (new Config())->toJson());
+                return str_contains($args, (new Config)->toJson());
             })
             ->andReturn([
                 '<html></html>',
@@ -83,15 +84,15 @@ class MJMLTest extends TestCase
         $mjml->render($this->validMjml);
     }
 
-    /** @test */
+    #[Test]
     public function itReturnsTheConfig(): void
     {
-        $mjml = new MJML();
+        $mjml = new MJML;
 
         $this->assertInstanceOf(Config::class, $mjml->getConfig());
     }
 
-    /** @test */
+    #[Test]
     public function itSetsTheConfig(): void
     {
         $config = new Config;
@@ -102,7 +103,7 @@ class MJMLTest extends TestCase
         $mjml->shouldReceive('exec')
             ->once()
             ->withArgs(function ($args): bool {
-                return str_contains($args, (new Config())->toJson());
+                return str_contains($args, (new Config)->toJson());
             })
             ->andReturn([
                 '<html></html>',
@@ -112,10 +113,10 @@ class MJMLTest extends TestCase
         $mjml->render($this->validMjml);
     }
 
-    /** @test */
+    #[Test]
     public function itForwardsCallsToTheConfigObject(): void
     {
-        $mjml = new MJML();
+        $mjml = new MJML;
         $mjml->minify()->beautify()->removeComments();
 
         $this->assertTrue($mjml->getConfig()->minify);
