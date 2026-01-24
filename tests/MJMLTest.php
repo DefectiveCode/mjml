@@ -153,7 +153,7 @@ class MJMLTest extends TestCase
     }
 
     #[Test]
-    public function itRemovesRegularHtmlComments(): void
+    public function itKeepsCommentsWhenMinifyingByDefault(): void
     {
         $mjml = $this->mockShellCall();
 
@@ -165,6 +165,23 @@ class MJMLTest extends TestCase
             ]);
 
         $result = $mjml->minify()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!-- This is a comment -->', $result);
+    }
+
+    #[Test]
+    public function itRemovesCommentsWhenRemoveCommentsIsCalled(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!-- This is a comment --><body><p>Hello</p></body></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringNotContainsString('This is a comment', $result);
     }
@@ -181,7 +198,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if mso]>', $result);
         $this->assertStringContainsString('<![endif]-->', $result);
@@ -199,7 +216,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if !mso]>', $result);
     }
@@ -216,7 +233,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if gte mso 9]>', $result);
     }
@@ -233,7 +250,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if lte mso 11]>', $result);
     }
@@ -250,7 +267,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if (gte mso 9)|(IE)]>', $result);
     }
@@ -267,7 +284,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if mso | IE]>', $result);
     }
@@ -284,7 +301,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if !mso]><!-->', $result);
         $this->assertStringContainsString('<!--<![endif]-->', $result);
@@ -302,7 +319,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if gt mso 15]>', $result);
     }
@@ -319,7 +336,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if lt mso 12]>', $result);
     }
@@ -336,7 +353,7 @@ class MJMLTest extends TestCase
                 0,
             ]);
 
-        $result = $mjml->minify()->render($this->validMjml);
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
 
         $this->assertStringContainsString('<!--[if IE 9]>', $result);
     }

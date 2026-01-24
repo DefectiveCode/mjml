@@ -65,15 +65,18 @@ class MJML
         }
 
         if ($this->config->minify) {
-            $output = $this->minifyHtml($output);
+            $output = $this->minifyHtml($output, $this->config->keepComments);
         }
 
         return $output;
     }
 
-    protected function minifyHtml(string $html): string
+    protected function minifyHtml(string $html, bool $keepComments = true): string
     {
-        $html = preg_replace('/<!--(?![<\[])(?!.*?(?:\[if|endif)).*?-->/s', '', $html);
+        if (! $keepComments) {
+            $html = preg_replace('/<!--(?![<\[])(?!.*?(?:\[if|endif)).*?-->/s', '', $html);
+        }
+
         $html = preg_replace('/\s+/', ' ', $html);
         $html = preg_replace('/>\s+</', '><', $html);
 
