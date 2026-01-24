@@ -21,7 +21,7 @@ stub_packages() {
 bundle() {
     rm -f ./build/mjml-bundled.js
     echo "Pre-bundling..."
-    bun build ./build/mjml.mjs --outfile=./build/mjml-bundled.js --target=bun --format=iife --packages=bundle
+    bun build ./build/mjml.mjs --outfile=./build/mjml-bundled.js --target=bun --format=iife --packages=bundle --minify
 }
 
 build_macos() {
@@ -30,7 +30,7 @@ build_macos() {
     do
         filename="mjml-$target"
         echo "Building: $target -> $filename"
-        bun build --compile --target="bun-$target" ./build/mjml-bundled.js --outfile=./bin/"$filename"
+        bun build --compile --minify --target="bun-$target" ./build/mjml-bundled.js --outfile=./bin/"$filename"
     done
 }
 
@@ -41,7 +41,7 @@ build_linux_glibc() {
         filename="mjml-linux-$arch"
         echo "Building: linux-$arch (glibc) -> $filename"
         docker run --rm -v "$(pwd)":/host oven/bun:latest \
-            sh -c "cd /tmp && bun build --compile --target=bun-linux-$arch /host/build/mjml-bundled.js --outfile=$filename && cp $filename /host/bin/"
+            sh -c "cd /tmp && bun build --compile --minify --target=bun-linux-$arch /host/build/mjml-bundled.js --outfile=$filename && cp $filename /host/bin/"
     done
 }
 
@@ -52,7 +52,7 @@ build_linux_musl() {
         filename="mjml-linux-$arch-musl"
         echo "Building: linux-$arch-musl -> $filename"
         docker run --rm -v "$(pwd)":/host oven/bun:alpine \
-            sh -c "cd /tmp && bun build --compile --target=bun-linux-$arch-musl /host/build/mjml-bundled.js --outfile=$filename && cp $filename /host/bin/"
+            sh -c "cd /tmp && bun build --compile --minify --target=bun-linux-$arch-musl /host/build/mjml-bundled.js --outfile=$filename && cp $filename /host/bin/"
     done
 }
 

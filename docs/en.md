@@ -1,3 +1,7 @@
+# Upgrading
+
+If you are upgrading from a previous version, please see the [Upgrade Guide](https://github.com/DefectiveCode/mjml/blob/main/UPGRADE.md) for breaking changes and migration steps.
+
 # Introduction
 
 [MJML](https://mjml.io/) is a markup language specifically designed to simplify the process of coding responsive emails.
