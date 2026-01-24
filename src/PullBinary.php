@@ -8,9 +8,9 @@ use RuntimeException;
 
 class PullBinary
 {
-    public const BASE_DOWNLOAD_URL = 'https://downloads.defectivecode.com/packages/mjml/';
+    public const string BASE_DOWNLOAD_URL = 'https://downloads.defectivecode.com/packages/mjml/';
 
-    public const ALLOWED_BINARIES = [
+    public const array ALLOWED_BINARIES = [
         'darwin-arm64',
         'darwin-x64',
         'linux-arm64',
