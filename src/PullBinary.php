@@ -131,12 +131,6 @@ class PullBinary
             return 'musl';
         }
 
-        $ldd = @shell_exec('ldd /bin/ls 2>&1');
-
-        if ($ldd && str_contains($ldd, 'musl')) {
-            return 'musl';
-        }
-
         return 'glibc';
     }
 
