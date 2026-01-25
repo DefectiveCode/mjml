@@ -134,4 +134,244 @@ class MJMLTest extends TestCase
 
         return $mjml;
     }
+
+    #[Test]
+    public function itMinifiesHtmlWhenEnabled(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html>    <body>   <p>Hello</p>   </body>    </html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->render($this->validMjml);
+
+        $this->assertEquals('<html><body><p>Hello</p></body></html>', $result);
+    }
+
+    #[Test]
+    public function itKeepsCommentsWhenMinifyingByDefault(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!-- This is a comment --><body><p>Hello</p></body></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!-- This is a comment -->', $result);
+    }
+
+    #[Test]
+    public function itRemovesCommentsWhenRemoveCommentsIsCalled(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!-- This is a comment --><body><p>Hello</p></body></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringNotContainsString('This is a comment', $result);
+    }
+
+    #[Test]
+    public function itPreservesOutlookMsoConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if mso]><table><tr><td><![endif]--><p>Hello</p><!--[if mso]></td></tr></table><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if mso]>', $result);
+        $this->assertStringContainsString('<![endif]-->', $result);
+    }
+
+    #[Test]
+    public function itPreservesOutlookNotMsoConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if !mso]><div class="mobile-only"><![endif]--><p>Hello</p><!--[if !mso]></div><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if !mso]>', $result);
+    }
+
+    #[Test]
+    public function itPreservesOutlookGteMsoConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if gte mso 9]><xml><o:OfficeDocumentSettings></o:OfficeDocumentSettings></xml><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if gte mso 9]>', $result);
+    }
+
+    #[Test]
+    public function itPreservesOutlookLteMsoConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if lte mso 11]><style>.outlook-fix { width: 100%; }</style><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if lte mso 11]>', $result);
+    }
+
+    #[Test]
+    public function itPreservesOutlookMsoOrIeConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if (gte mso 9)|(IE)]><table><tr><td><![endif]--><p>Hello</p><!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if (gte mso 9)|(IE)]>', $result);
+    }
+
+    #[Test]
+    public function itPreservesOutlookMsoPipeIeConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if mso | IE]><table role="presentation"><![endif]--><p>Hello</p><!--[if mso | IE]></table><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if mso | IE]>', $result);
+    }
+
+    #[Test]
+    public function itPreservesDownlevelHiddenConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if !mso]><!--><div class="non-outlook">Content</div><!--<![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if !mso]><!-->', $result);
+        $this->assertStringContainsString('<!--<![endif]-->', $result);
+    }
+
+    #[Test]
+    public function itPreservesOutlookGtMsoConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if gt mso 15]><style>.new-outlook { display: block; }</style><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if gt mso 15]>', $result);
+    }
+
+    #[Test]
+    public function itPreservesOutlookLtMsoConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if lt mso 12]><style>.old-outlook { display: block; }</style><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if lt mso 12]>', $result);
+    }
+
+    #[Test]
+    public function itPreservesIeVersionConditional(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html><!--[if IE 9]><link rel="stylesheet" href="ie9.css"><![endif]--></html>',
+                0,
+            ]);
+
+        $result = $mjml->minify()->removeComments()->render($this->validMjml);
+
+        $this->assertStringContainsString('<!--[if IE 9]>', $result);
+    }
+
+    #[Test]
+    public function itDoesNotMinifyWhenDisabled(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                '<html>    <body>   <p>Hello</p>   </body>    </html>',
+                0,
+            ]);
+
+        $result = $mjml->minify(false)->render($this->validMjml);
+
+        $this->assertStringContainsString('    ', $result);
+    }
 }

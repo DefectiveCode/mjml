@@ -1,3 +1,7 @@
+# Upgrading
+
+If you are upgrading from a previous version, please see the [Upgrade Guide](https://github.com/DefectiveCode/mjml/blob/main/UPGRADE.md) for breaking changes and migration steps.
+
 # Introduction
 
 [MJML](https://mjml.io/) is a markup language specifically designed to simplify the process of coding responsive emails.
@@ -54,13 +58,15 @@ MJML::minify()->render(
     operating and architecture systems you need to save on bandwidth and install times. The following are the available
     binaries.
 
-    | Operating System | Architecture | Composer Post Update Command                  |
-    | ---------------- | ------------ | --------------------------------------------- |
-    | All              | All          | `DefectiveCode\MJML\PullBinary::all`          |
-    | Darwin (MacOS)   | arm64        | `DefectiveCode\MJML\PullBinary::darwin-arm64` |
-    | Darwin (MacOS)   | x64          | `DefectiveCode\MJML\PullBinary::darwin-x64`   |
-    | Linux            | arm64        | `DefectiveCode\MJML\PullBinary::linux-arm64`  |
-    | Linux            | x64          | `DefectiveCode\MJML\PullBinary::linux-x64`    |
+    | Operating System | Architecture | Composer Post Update Command                      |
+    | ---------------- | ------------ | ------------------------------------------------- |
+    | All              | All          | `DefectiveCode\MJML\PullBinary::all`              |
+    | Darwin (MacOS)   | arm64        | `DefectiveCode\MJML\PullBinary::darwin-arm64`     |
+    | Darwin (MacOS)   | x64          | `DefectiveCode\MJML\PullBinary::darwin-x64`       |
+    | Linux (glibc)    | arm64        | `DefectiveCode\MJML\PullBinary::linux-arm64`      |
+    | Linux (glibc)    | x64          | `DefectiveCode\MJML\PullBinary::linux-x64`        |
+    | Linux (musl)     | arm64        | `DefectiveCode\MJML\PullBinary::linux-arm64-musl` |
+    | Linux (musl)     | x64          | `DefectiveCode\MJML\PullBinary::linux-x64-musl`   |
 
 2. Next, install the PHP package by running the following composer command:
     ```bash
@@ -152,9 +158,8 @@ Our package follows the [same configuration](https://github.com/mjmlio/mjml/tree
 except for the following:
 
 - `preprocessors` - This option is not available. Please open a pull request if you would like to add this option.
-- `minifyOptions` - We use `html-minifier-terser` while the official package uses `html-minifier` for minification. We
-  decided to switch the processor because `html-minifer` is no longer maintained and has a few security issues associate
-  with it.
+- `minifyOptions` - We use a lightweight PHP-based minifier instead of `html-minifier`. The minifier removes comments
+  (except Outlook conditionals), collapses whitespace, and removes whitespace between tags.
 
 ## Fonts
 
@@ -206,21 +211,18 @@ You may override any of these options by providing a valid `js-beautify` configu
 
 ## Minify
 
-Our package will minify the HTML using [`html-minifier-terser`](https://www.npmjs.com/package/html-minifier-terser) with
-the following default options:
+Our package will minify the HTML output when enabled. Minification performs the following:
 
-- collapseWhitespace: true
-- minifyCSS: false
-- caseSensitive: true
-- removeEmptyAttributes: true
+- Removes HTML comments (preserves Outlook conditional comments like `<!--[if mso]>`)
+- Collapses multiple whitespace characters into single spaces
+- Removes whitespace between HTML tags
 
-You may override any of these options by providing a
-valid [`html-minifier-terser`](https://www.npmjs.com/package/html-minifier-terser) configuration using the following
-methods:
+You may enable or disable minification by calling the `minify(bool $minify)` method.
 
-- `setMinifyOptions(array $options)` - Set the `html-minifier-terser` options.
-- `addMinifyOption(string $option, mixed $value)` - Adds a `html-minifier-terser` option.
-- `removeMinifyOption(string $option)` - Removes a `html-minifier-terser` option.
+> **Why PHP-based minification?** The official MJML package uses `html-minifier` for minification, which has a
+> known [ReDoS vulnerability (CVE-2022-37620)](https://nvd.nist.gov/vuln/detail/CVE-2022-37620) with no fix available
+> as the package is unmaintained. To avoid bundling vulnerable dependencies, we moved minification to PHP using a
+> lightweight, secure implementation.
 
 ## Validation Level
 
