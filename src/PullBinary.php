@@ -47,11 +47,19 @@ class PullBinary
         self::pull(...self::extractBinaryParts($name));
     }
 
+    /**
+     * @return array{string, string, ?string}
+     */
     protected static function extractBinaryParts(string $binary): array
     {
         $parts = explode('-', $binary);
         $operatingSystem = $parts[0];
         $architecture = $parts[1];
+
+        if ($operatingSystem !== 'linux') {
+            return [$operatingSystem, $architecture, null];
+        }
+
         $libc = $parts[2] ?? 'glibc';
 
         return [$operatingSystem, $architecture, $libc];
@@ -72,7 +80,7 @@ class PullBinary
         return filesize($binaryPath) === (int) $headers['Content-Length'];
     }
 
-    protected static function pull(string $operatingSystem, string $architecture, string $libc = 'glibc'): void
+    protected static function pull(string $operatingSystem, string $architecture, ?string $libc = null): void
     {
         $suffix = $libc === 'musl' ? '-musl' : '';
         $binaryPath = __DIR__."/../bin/mjml-{$operatingSystem}-{$architecture}{$suffix}";
@@ -113,10 +121,10 @@ class PullBinary
         };
     }
 
-    protected static function resolveLibc(string $operatingSystem): string
+    protected static function resolveLibc(string $operatingSystem): ?string
     {
         if ($operatingSystem !== 'linux') {
-            return 'glibc';
+            return null;
         }
 
         if (file_exists('/lib/ld-musl-aarch64.so.1') || file_exists('/lib/ld-musl-x86_64.so.1')) {
@@ -124,6 +132,7 @@ class PullBinary
         }
 
         $ldd = @shell_exec('ldd /bin/ls 2>&1');
+
         if ($ldd && str_contains($ldd, 'musl')) {
             return 'musl';
         }

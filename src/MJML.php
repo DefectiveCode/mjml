@@ -100,6 +100,9 @@ class MJML
         return $this->forwardDecoratedCallTo($this->config, $method, $parameters);
     }
 
+    /**
+     * @return array{string, int}
+     */
     protected function exec(string $arguments): array
     {
         $binary = PullBinary::resolveBinaryPath(php_uname('s'), php_uname('m'));

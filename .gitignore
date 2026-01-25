@@ -11,3 +11,4 @@ yarn-error.log
 /bin/*
 package-lock.json
 bun.lockb
+build/mjml-bundled.js

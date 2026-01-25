@@ -190,8 +190,8 @@ class PullBinaryTest extends TestCase
     public static function binaryPartsProvider(): array
     {
         return [
-            'darwin-arm64' => ['darwin-arm64', ['darwin', 'arm64', 'glibc']],
-            'darwin-x64' => ['darwin-x64', ['darwin', 'x64', 'glibc']],
+            'darwin-arm64' => ['darwin-arm64', ['darwin', 'arm64', null]],
+            'darwin-x64' => ['darwin-x64', ['darwin', 'x64', null]],
             'linux-arm64' => ['linux-arm64', ['linux', 'arm64', 'glibc']],
             'linux-x64' => ['linux-x64', ['linux', 'x64', 'glibc']],
             'linux-arm64-musl' => ['linux-arm64-musl', ['linux', 'arm64', 'musl']],
@@ -205,7 +205,7 @@ class PullBinaryTest extends TestCase
         $method = $this->getProtectedMethod('resolveLibc');
         $result = $method->invoke(null, 'darwin');
 
-        $this->assertEquals('glibc', $result);
+        $this->assertNull($result);
     }
 
     protected function getProtectedMethod(string $methodName): \ReflectionMethod
