@@ -1,6 +1,9 @@
 {
     "name": "mjml",
     "type": "module",
+    "scripts": {
+        "test": "bun test build/mjml.test.mjs"
+    },
     "dependencies": {
         "js-beautify": "^1.15.4",
         "lodash": "^4.17.23",

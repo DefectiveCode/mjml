@@ -17,6 +17,9 @@ jobs:
 
             - run: bun install
 
+            - name: Bun Tests
+              run: bun test build/mjml.test.mjs
+
             - name: Prettier
               run: bunx prettier --check "{!(vendor|node_modules)/**/*,*}.{js,ts,jsx,tsx,vue,xml,json,blade.php,css,md,yml,html}"
 
