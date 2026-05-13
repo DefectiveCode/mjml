@@ -1,12 +1,14 @@
+import { readFileSync } from 'node:fs';
 import mjml2html from 'mjml';
 import { html } from 'js-beautify';
 import { snakecase } from 'snakecase';
 import mapKeys from 'lodash/mapKeys.js';
 import merge from 'lodash/merge.js';
 
+const fileArgumentPrefix = '--mjml-file=';
 const args = process.argv.slice(2);
-const mjmlContent = args[0];
-const options = JSON.parse(args[1] || '{}');
+const mjmlInput = args[0];
+const optionsInput = args[1] || '{}';
 
 const defaultBeautifyConfig = {
     indent_size: 2,
@@ -15,24 +17,40 @@ const defaultBeautifyConfig = {
     preserve_newlines: false,
 };
 
-const shouldBeautify = options.beautify || false;
-const beautifyOptions = merge(
-    defaultBeautifyConfig,
-    mapKeys(options.beautifyOptions || {}, (value, key) => {
-        return snakecase(key);
-    })
-);
-
-delete options.minify;
-delete options.beautify;
-delete options.beautifyOptions;
-
-if (!mjmlContent) {
+if (!mjmlInput) {
     console.log('No MJML content provided.');
     process.exit(1);
 }
 
+function resolveMjmlContent(input) {
+    if (!input.startsWith(fileArgumentPrefix)) {
+        return input;
+    }
+
+    const filePath = input.slice(fileArgumentPrefix.length);
+
+    if (!filePath) {
+        throw new Error('No MJML input file path provided.');
+    }
+
+    return readFileSync(filePath, 'utf8');
+}
+
 try {
+    const options = JSON.parse(optionsInput);
+    const shouldBeautify = options.beautify || false;
+    const beautifyOptions = merge(
+        defaultBeautifyConfig,
+        mapKeys(options.beautifyOptions || {}, (value, key) => {
+            return snakecase(key);
+        })
+    );
+
+    delete options.minify;
+    delete options.beautify;
+    delete options.beautifyOptions;
+
+    const mjmlContent = resolveMjmlContent(mjmlInput);
     let htmlOutput = mjml2html(mjmlContent, options).html;
 
     if (shouldBeautify) {
