@@ -53,10 +53,35 @@ test('maps beautify options before formatting output', async () => {
 });
 
 test('strips wrapper-only options before rendering', async () => {
-    const result = await runMjml([mjml('Hello Wrapper Options'), '{"minify":true,"beautify":false,"beautifyOptions":{"indentSize":8}}']);
+    const result = await runMjml([
+        mjml('Hello Wrapper Options'),
+        '{"minify":true,"minifyOptions":{"collapseWhitespace":false},"beautify":false,"beautifyOptions":{"indentSize":8}}',
+    ]);
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('Hello Wrapper Options');
+    expect(result.stderr).toBe('');
+});
+
+test('ignores includes by default', async () => {
+    const filePath = createTempIncludeFile('Ignored Include');
+    const result = await runMjml([mjmlInclude(filePath), '{}']);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).not.toContain('Ignored Include');
+    expect(result.stderr).toBe('');
+});
+
+test('renders includes when explicitly enabled', async () => {
+    const directory = createTempDirectory();
+    const includePath = join(directory, 'header.mjml');
+
+    writeFileSync(includePath, '<mj-text>Allowed Include</mj-text>');
+
+    const result = await runMjml([mjmlInclude('header.mjml'), JSON.stringify({ filePath: directory, ignoreIncludes: false })]);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toContain('Allowed Include');
     expect(result.stderr).toBe('');
 });
 
@@ -118,17 +143,37 @@ async function runMjml(args) {
 }
 
 function createTempMjmlFile(text) {
-    const directory = mkdtempSync(join(tmpdir(), 'mjml-test-'));
+    const directory = createTempDirectory();
     const filePath = join(directory, 'email.mjml');
 
-    createdPaths.push(directory);
     writeFileSync(filePath, mjml(text));
 
     return filePath;
 }
 
+function createTempIncludeFile(text) {
+    const directory = createTempDirectory();
+    const filePath = join(directory, 'header.mjml');
+
+    writeFileSync(filePath, `<mj-text>${text}</mj-text>`);
+
+    return filePath;
+}
+
+function createTempDirectory() {
+    const directory = mkdtempSync(join(tmpdir(), 'mjml-test-'));
+
+    createdPaths.push(directory);
+
+    return directory;
+}
+
 function mjml(text) {
     return `<mjml><mj-body><mj-section><mj-column><mj-text>${text}</mj-text></mj-column></mj-section></mj-body></mjml>`;
+}
+
+function mjmlInclude(path) {
+    return `<mjml><mj-body><mj-section><mj-column><mj-include path="${path}" /></mj-column></mj-section></mj-body></mjml>`;
 }
 
 function invalidMjml() {

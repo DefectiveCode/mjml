@@ -12,12 +12,6 @@ prompt_version() {
     echo "Version set to: $VERSION"
 }
 
-stub_packages() {
-    echo "Stubbing problematic packages..."
-    cp ./build/stubs/uglify-js/index.js ./node_modules/uglify-js/tools/node.js
-    cp ./build/stubs/clean-css/index.js ./node_modules/clean-css/index.js
-}
-
 bundle() {
     rm -f ./build/mjml-bundled.js
     echo "Pre-bundling..."
@@ -87,7 +81,6 @@ cleanup() {
 prompt_version
 source .env
 bun install
-stub_packages
 bundle
 build_macos
 build_linux_glibc

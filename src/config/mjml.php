@@ -21,9 +21,10 @@ return [
     'keep_comments' => true,
 
     /**
-     * Enable or disable the use of the mj-include component.
+     * Ignore mj-include tags by default. Set this to false only when includes
+     * are needed and scoped with file_path and include_path.
      */
-    'ignore_includes' => false,
+    'ignore_includes' => true,
 
     /**
      * Enable or disable beautification of the html using js-beautify.
@@ -55,9 +56,14 @@ return [
     'validation_level' => ValidationLevel::soft,
 
     /**
-     * Path of file, used for relative paths in mj-includes
+     * Base path for resolving mj-includes.
      */
     'file_path' => '.',
+
+    /**
+     * Additional paths that mj-includes may read from.
+     */
+    'include_path' => null,
 
     /**
      * The options past to juice.

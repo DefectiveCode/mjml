@@ -323,11 +323,12 @@ class MJMLTest extends TestCase
     public function itForwardsCallsToTheConfigObject(): void
     {
         $mjml = new MJML;
-        $mjml->minify()->beautify()->removeComments();
+        $mjml->minify()->beautify()->removeComments()->includePath('/tmp/includes');
 
         $this->assertTrue($mjml->getConfig()->minify);
         $this->assertTrue($mjml->getConfig()->beautify);
         $this->assertFalse($mjml->getConfig()->keepComments);
+        $this->assertSame('/tmp/includes', $mjml->getConfig()->includePath);
     }
 
     protected function mockShellCall(?Config $config = null): MockInterface

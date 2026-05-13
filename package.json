@@ -4,16 +4,21 @@
     "scripts": {
         "test": "bun test build/mjml.test.mjs"
     },
+    "overrides": {
+        "brace-expansion": "^2.1.0",
+        "minimatch": "^9.0.9",
+        "picomatch": "^2.3.2"
+    },
     "dependencies": {
         "js-beautify": "^1.15.4",
-        "lodash": "^4.17.23",
-        "lodash-es": "^4.17.22",
-        "mjml": "4.18.0",
+        "lodash": "4.18.1",
+        "mjml": "5.2.1",
         "snakecase": "^1.0.0"
     },
     "devDependencies": {
         "@prettier/plugin-xml": "^3.4.2",
-        "prettier": "^3.8.0",
-        "prettier-plugin-packagejson": "^2.5.21"
+        "prettier": "^3.8.3",
+        "prettier-plugin-packagejson": "^3.0.2",
+        "typescript": "^5.9.3"
     }
 }

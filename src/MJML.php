@@ -27,6 +27,7 @@ use Illuminate\Support\Traits\ForwardsCalls;
  * @method MJML minify(bool $minify = true)
  * @method MJML validationLevel(ValidationLevel $validationLevel)
  * @method MJML filePath(string $filePath = '.')
+ * @method MJML includePath(string|array|null $includePath = null)
  */
 class MJML
 {

@@ -15,21 +15,23 @@ class ConfigTest extends TestCase
     public function itSetsThePropertiesFromAnArray(): void
     {
         $arrayConfig = [
-            'keepComments' => false,
-            'ignoreIncludes' => true,
+            'keep_comments' => false,
+            'ignore_includes' => false,
+            'include_path' => ['/tmp/includes'],
         ];
 
         $config = new Config($arrayConfig);
 
         $this->assertFalse($config->keepComments);
-        $this->assertTrue($config->ignoreIncludes);
+        $this->assertFalse($config->ignoreIncludes);
+        $this->assertSame(['/tmp/includes'], $config->includePath);
     }
 
     #[Test]
     public function itReturnsAJsonObjectOfTheConfig(): void
     {
         $this->assertEquals(
-            '{"fonts":{"Open Sans":"https:\/\/fonts.googleapis.com\/css?family=Open+Sans:300,400,500,700","Droid Sans":"https:\/\/fonts.googleapis.com\/css?family=Droid+Sans:300,400,500,700","Lato":"https:\/\/fonts.googleapis.com\/css?family=Lato:300,400,500,700","Roboto":"https:\/\/fonts.googleapis.com\/css?family=Roboto:300,400,500,700","Ubuntu":"https:\/\/fonts.googleapis.com\/css?family=Ubuntu:300,400,500,700"},"keepComments":true,"ignoreIncludes":false,"beautify":false,"beautifyOptions":{"indentSize":2,"wrapAttributesIndentSize":2,"maxPreserveNewline":0,"preserveNewlines":false},"minify":false,"validationLevel":"soft","filePath":".","juiceOptions":[],"juicePreserveTags":[]}',
+            '{"fonts":{"Open Sans":"https:\/\/fonts.googleapis.com\/css?family=Open+Sans:300,400,500,700","Droid Sans":"https:\/\/fonts.googleapis.com\/css?family=Droid+Sans:300,400,500,700","Lato":"https:\/\/fonts.googleapis.com\/css?family=Lato:300,400,500,700","Roboto":"https:\/\/fonts.googleapis.com\/css?family=Roboto:300,400,500,700","Ubuntu":"https:\/\/fonts.googleapis.com\/css?family=Ubuntu:300,400,500,700"},"keepComments":true,"ignoreIncludes":true,"beautify":false,"beautifyOptions":{"indentSize":2,"wrapAttributesIndentSize":2,"maxPreserveNewline":0,"preserveNewlines":false},"minify":false,"validationLevel":"soft","filePath":".","includePath":null,"juiceOptions":[],"juicePreserveTags":[]}',
             (new Config)->toJson()
         );
     }
@@ -92,6 +94,20 @@ class ConfigTest extends TestCase
         $this->assertEquals(
             '/tmp',
             (new Config)->filePath('/tmp')->filePath
+        );
+    }
+
+    #[Test]
+    public function itSetsTheIncludePath(): void
+    {
+        $this->assertSame(
+            '/tmp/includes',
+            (new Config)->includePath('/tmp/includes')->includePath
+        );
+
+        $this->assertSame(
+            ['/tmp/includes', '/tmp/shared'],
+            (new Config)->includePath(['/tmp/includes', '/tmp/shared'])->includePath
         );
     }
 

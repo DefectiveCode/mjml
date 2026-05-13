@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DefectiveCode\MJML;
 
 use BadMethodCallException;
+use Illuminate\Support\Str;
 
 /**
  * @method Config addFont(string $font, string $url)
@@ -32,7 +33,7 @@ class Config
 
     public bool $keepComments = true;
 
-    public bool $ignoreIncludes = false;
+    public bool $ignoreIncludes = true;
 
     public bool $beautify = false;
 
@@ -49,6 +50,8 @@ class Config
 
     public string $filePath = '.';
 
+    public string|array|null $includePath = null;
+
     public array $juiceOptions = [];
 
     public array $juicePreserveTags = [];
@@ -58,6 +61,8 @@ class Config
         $this->validationLevel = ValidationLevel::soft;
 
         foreach ($config as $property => $value) {
+            $property = Str::camel($property);
+
             if (property_exists($this, $property)) {
                 $this->{$property} = $value;
             }
@@ -75,6 +80,7 @@ class Config
             'minify' => $this->minify,
             'validationLevel' => $this->validationLevel->value,
             'filePath' => $this->filePath,
+            'includePath' => $this->includePath,
             'juiceOptions' => $this->juiceOptions,
             'juicePreserveTags' => $this->juicePreserveTags,
         ]);
@@ -125,6 +131,13 @@ class Config
     public function filePath(string $filePath = '.'): self
     {
         $this->filePath = $filePath;
+
+        return $this;
+    }
+
+    public function includePath(string|array|null $includePath = null): self
+    {
+        $this->includePath = $includePath;
 
         return $this;
     }
