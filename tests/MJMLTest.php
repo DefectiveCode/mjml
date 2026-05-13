@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DefectiveCode\MJML\Tests;
 
 use Exception;
+use TypeError;
 use Mockery\MockInterface;
 use DefectiveCode\MJML\MJML;
 use DefectiveCode\MJML\Config;
@@ -36,7 +37,7 @@ class MJMLTest extends TestCase
         $mjml->shouldReceive('exec')
             ->once()
             ->withArgs(function ($args): bool {
-                return str_contains($args, $this->validMjml);
+                return str_contains($args, $this->validMjml) && ! str_contains($args, '--mjml-file=');
             })
             ->andReturn([
                 '<html></html>',
@@ -44,6 +45,211 @@ class MJMLTest extends TestCase
             ]);
 
         $mjml->render($this->validMjml);
+    }
+
+    #[Test]
+    public function itPassesLargeMjmlToTheMJMLBinaryByFilePath(): void
+    {
+        $largeMjml = $this->largeMjml();
+        $inputFile = null;
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->withArgs(function ($args) use ($largeMjml, &$inputFile): bool {
+                if (str_contains($args, $largeMjml)) {
+                    return false;
+                }
+
+                if (! preg_match("/'--mjml-file=([^']+)'/", $args, $matches)) {
+                    return false;
+                }
+
+                $inputFile = $matches[1];
+
+                return file_exists($inputFile) && file_get_contents($inputFile) === $largeMjml;
+            })
+            ->andReturn([
+                '<html></html>',
+                0,
+            ]);
+
+        $mjml->render($largeMjml);
+
+        $this->assertNotNull($inputFile);
+        $this->assertFileDoesNotExist($inputFile);
+    }
+
+    #[Test]
+    public function itPassesThresholdSizedMjmlInline(): void
+    {
+        $mjmlContent = str_repeat('A', 30000 - strlen($this->mjmlWrapper('')));
+        $thresholdMjml = $this->mjmlWrapper($mjmlContent);
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->withArgs(function ($args) use ($thresholdMjml): bool {
+                return str_contains($args, $thresholdMjml) && ! str_contains($args, '--mjml-file=');
+            })
+            ->andReturn([
+                '<html></html>',
+                0,
+            ]);
+
+        $mjml->render($thresholdMjml);
+    }
+
+    #[Test]
+    public function itPassesAboveThresholdMjmlByFilePath(): void
+    {
+        $mjmlContent = str_repeat('A', 30001 - strlen($this->mjmlWrapper('')));
+        $aboveThresholdMjml = $this->mjmlWrapper($mjmlContent);
+        $inputFile = null;
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->withArgs(function ($args) use ($aboveThresholdMjml, &$inputFile): bool {
+                if (str_contains($args, $aboveThresholdMjml)) {
+                    return false;
+                }
+
+                if (! preg_match("/'--mjml-file=([^']+)'/", $args, $matches)) {
+                    return false;
+                }
+
+                $inputFile = $matches[1];
+
+                return file_exists($inputFile) && file_get_contents($inputFile) === $aboveThresholdMjml;
+            })
+            ->andReturn([
+                '<html></html>',
+                0,
+            ]);
+
+        $mjml->render($aboveThresholdMjml);
+
+        $this->assertNotNull($inputFile);
+        $this->assertFileDoesNotExist($inputFile);
+    }
+
+    #[Test]
+    public function itRemovesLargeMjmlInputFileWhenRenderingFails(): void
+    {
+        $largeMjml = $this->largeMjml();
+        $inputFile = null;
+        $exceptionThrown = false;
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->withArgs(function ($args) use (&$inputFile): bool {
+                if (! preg_match("/'--mjml-file=([^']+)'/", $args, $matches)) {
+                    return false;
+                }
+
+                $inputFile = $matches[1];
+
+                return file_exists($inputFile);
+            })
+            ->andReturn([
+                'Invalid MJML',
+                1,
+            ]);
+
+        try {
+            $mjml->render($largeMjml);
+        } catch (Exception $exception) {
+            $exceptionThrown = true;
+
+            $this->assertSame('Invalid MJML', $exception->getMessage());
+        }
+
+        $this->assertTrue($exceptionThrown);
+        $this->assertNotNull($inputFile);
+        $this->assertFileDoesNotExist($inputFile);
+    }
+
+    #[Test]
+    public function itRemovesLargeMjmlInputFileWhenPreparingArgumentsFails(): void
+    {
+        $largeMjml = $this->largeMjml();
+        $inputFile = tempnam(sys_get_temp_dir(), 'mjml_input');
+        $handle = fopen(__FILE__, 'r');
+        $exceptionThrown = false;
+        $config = new Config;
+        $config->fonts = [$handle];
+
+        file_put_contents($inputFile, $largeMjml);
+
+        $mjml = $this->mockShellCall($config);
+
+        $mjml->shouldReceive('writeLargeMjmlToInputFile')
+            ->once()
+            ->andReturn($inputFile);
+
+        $mjml->shouldReceive('exec')
+            ->never();
+
+        try {
+            $mjml->render($largeMjml);
+        } catch (TypeError $exception) {
+            $exceptionThrown = true;
+        } finally {
+            fclose($handle);
+        }
+
+        $this->assertTrue($exceptionThrown);
+        $this->assertFileDoesNotExist($inputFile);
+    }
+
+    #[Test]
+    public function itThrowsWhenLargeMjmlInputFileCannotBeCreated(): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Unable to create MJML input file.');
+
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('createInputFile')
+            ->once()
+            ->andReturn(null);
+
+        $mjml->shouldReceive('exec')
+            ->never();
+
+        $mjml->render($this->largeMjml());
+    }
+
+    #[Test]
+    public function itRemovesInputFileWhenLargeMjmlCannotBeWritten(): void
+    {
+        $inputFile = tempnam(sys_get_temp_dir(), 'mjml_input');
+        $exceptionThrown = false;
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('createInputFile')
+            ->once()
+            ->andReturn($inputFile);
+
+        $mjml->shouldReceive('writeInputFile')
+            ->once()
+            ->andReturn(false);
+
+        $mjml->shouldReceive('exec')
+            ->never();
+
+        try {
+            $mjml->render($this->largeMjml());
+        } catch (Exception $exception) {
+            $exceptionThrown = true;
+
+            $this->assertSame('Unable to write MJML input file.', $exception->getMessage());
+        }
+
+        $this->assertTrue($exceptionThrown);
+        $this->assertFileDoesNotExist($inputFile);
     }
 
     #[Test]
@@ -133,6 +339,16 @@ class MJMLTest extends TestCase
         $mjml->setConfig($config ?? new Config);
 
         return $mjml;
+    }
+
+    protected function largeMjml(): string
+    {
+        return $this->mjmlWrapper(str_repeat('Hello World ', 10000));
+    }
+
+    protected function mjmlWrapper(string $content): string
+    {
+        return '<mjml><mj-body><mj-section><mj-column><mj-text>'.$content.'</mj-text></mj-column></mj-section></mj-body></mjml>';
     }
 
     #[Test]

@@ -32,6 +32,10 @@ class MJML
 {
     use ForwardsCalls;
 
+    protected const int MAX_INLINE_ARGUMENT_LENGTH = 30000;
+
+    protected const string FILE_ARGUMENT_PREFIX = '--mjml-file=';
+
     protected Config $config;
 
     public function __construct(?Config $config = null)
@@ -55,10 +59,16 @@ class MJML
 
     public function render(string $mjml): string
     {
-        $mjml = escapeshellarg($mjml);
-        $options = escapeshellarg($this->config->toJson());
+        $inputFile = $this->writeLargeMjmlToInputFile($mjml);
 
-        [$output, $code] = $this->exec("{$mjml} {$options}");
+        try {
+            $mjmlArgument = $inputFile === null ? $mjml : self::FILE_ARGUMENT_PREFIX.$inputFile;
+            $options = escapeshellarg($this->config->toJson());
+
+            [$output, $code] = $this->exec(escapeshellarg($mjmlArgument)." {$options}");
+        } finally {
+            $this->deleteInputFile($inputFile);
+        }
 
         if ($code > 0) {
             throw new Exception($output);
@@ -81,6 +91,50 @@ class MJML
         $html = preg_replace('/>\s+</', '><', $html);
 
         return trim($html);
+    }
+
+    protected function writeLargeMjmlToInputFile(string $mjml): ?string
+    {
+        if (strlen($mjml) <= self::MAX_INLINE_ARGUMENT_LENGTH) {
+            return null;
+        }
+
+        $inputFile = $this->createInputFile();
+
+        if ($inputFile === null) {
+            throw new Exception('Unable to create MJML input file.');
+        }
+
+        if ($this->writeInputFile($inputFile, $mjml)) {
+            return $inputFile;
+        }
+
+        $this->deleteInputFile($inputFile);
+
+        throw new Exception('Unable to write MJML input file.');
+    }
+
+    protected function createInputFile(): ?string
+    {
+        return tempnam(sys_get_temp_dir(), 'mjml_input') ?: null;
+    }
+
+    protected function writeInputFile(string $inputFile, string $mjml): bool
+    {
+        return file_put_contents($inputFile, $mjml) !== false;
+    }
+
+    protected function deleteInputFile(?string $inputFile): void
+    {
+        if ($inputFile === null) {
+            return;
+        }
+
+        if (! file_exists($inputFile)) {
+            return;
+        }
+
+        @unlink($inputFile);
     }
 
     public function getConfig(): Config
