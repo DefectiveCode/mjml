@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use DefectiveCode\MJML\ValidationLevel;
 
 return [
     /**
@@ -51,7 +52,7 @@ return [
      * The validation level to use. See https://github.com/mjmlio/mjml/tree/master/packages/mjml-validator#validating-mjml
      * for more information.
      */
-    'validation_level' => \DefectiveCode\MJML\ValidationLevel::soft,
+    'validation_level' => ValidationLevel::soft,
 
     /**
      * Path of file, used for relative paths in mj-includes

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace DefectiveCode\MJML\Tests;
 
-use DefectiveCode\MJML\PullBinary;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use ReflectionClass;
 use RuntimeException;
+use DefectiveCode\MJML\PullBinary;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PullBinaryTest extends TestCase
 {
