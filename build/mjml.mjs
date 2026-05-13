@@ -36,30 +36,35 @@ function resolveMjmlContent(input) {
     return readFileSync(filePath, 'utf8');
 }
 
-try {
-    const options = JSON.parse(optionsInput);
-    const shouldBeautify = options.beautify || false;
-    const beautifyOptions = merge(
-        defaultBeautifyConfig,
-        mapKeys(options.beautifyOptions || {}, (value, key) => {
-            return snakecase(key);
-        })
-    );
+render();
 
-    delete options.minify;
-    delete options.beautify;
-    delete options.beautifyOptions;
+async function render() {
+    try {
+        const options = JSON.parse(optionsInput);
+        const shouldBeautify = options.beautify || false;
+        const beautifyOptions = merge(
+            defaultBeautifyConfig,
+            mapKeys(options.beautifyOptions || {}, (value, key) => {
+                return snakecase(key);
+            })
+        );
 
-    const mjmlContent = resolveMjmlContent(mjmlInput);
-    let htmlOutput = mjml2html(mjmlContent, options).html;
+        delete options.minify;
+        delete options.minifyOptions;
+        delete options.beautify;
+        delete options.beautifyOptions;
 
-    if (shouldBeautify) {
-        htmlOutput = html(htmlOutput, beautifyOptions);
+        const mjmlContent = resolveMjmlContent(mjmlInput);
+        let htmlOutput = (await mjml2html(mjmlContent, options)).html;
+
+        if (shouldBeautify) {
+            htmlOutput = html(htmlOutput, beautifyOptions);
+        }
+
+        console.log(htmlOutput);
+        process.exit(0);
+    } catch (exception) {
+        console.log(exception.message);
+        process.exit(1);
     }
-
-    console.log(htmlOutput);
-    process.exit(0);
-} catch (exception) {
-    console.log(exception.message);
-    process.exit(1);
 }

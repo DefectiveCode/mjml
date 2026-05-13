@@ -154,12 +154,14 @@ $html = (new MJML)
     );
 ```
 
-Our package follows the [same configuration](https://github.com/mjmlio/mjml/tree/master) as the official MJML package
+Our package follows the [same configuration](https://documentation.mjml.io/) as the official MJML package
 except for the following:
 
 - `preprocessors` - This option is not available. Please open a pull request if you would like to add this option.
-- `minifyOptions` - We use a lightweight PHP-based minifier instead of `html-minifier`. The minifier removes comments
-  (except Outlook conditionals), collapses whitespace, and removes whitespace between tags.
+- `minifyOptions` - We keep minification in PHP for output compatibility. The minifier removes comments (except Outlook
+  conditionals), collapses whitespace, and removes whitespace between tags.
+- `sanitizeStyles`, `templateSyntax`, and `allowMixedSyntax` - These MJML 5 options apply to MJML's native
+  htmlnano/cssnano minification path. They are not used by this package's PHP minifier.
 
 ## Fonts
 
@@ -186,13 +188,17 @@ You may also revert the `removeComments()` by calling the `keepComments()` metho
 
 ## Ignore Includes
 
-By default, our package will include any [`mj-include` tags](https://documentation.mjml.io/#mj-include). You may adjust
-this behavior by calling the `ignoreIncludes(bool $ignore)` method.
+By default, our package ignores [`mj-include` tags](https://documentation.mjml.io/#mj-include). This matches MJML 5's
+safer default. You may enable includes by calling `ignoreIncludes(false)`.
+
+When enabling includes, use `filePath(string $path)` as the base directory and `includePath(string|array|null $path)` to
+allow additional include directories.
 
 ## Beautify
 
-Our package will beautify the HTML using [`js-beautify`](https://www.npmjs.com/package/js-beautify) with the following
-default options:
+Our package will beautify the HTML using [`js-beautify`](https://www.npmjs.com/package/js-beautify). MJML 5.2 also uses
+`js-beautify` internally, but this package keeps wrapper-level beautification so custom PHP `beautifyOptions` continue to
+work. The default options are:
 
 - indentSize: 2
 - wrapAttributesIndentSize: 2
@@ -219,10 +225,9 @@ Our package will minify the HTML output when enabled. Minification performs the 
 
 You may enable or disable minification by calling the `minify(bool $minify)` method.
 
-> **Why PHP-based minification?** The official MJML package uses `html-minifier` for minification, which has a
-> known [ReDoS vulnerability (CVE-2022-37620)](https://nvd.nist.gov/vuln/detail/CVE-2022-37620) with no fix available
-> as the package is unmaintained. To avoid bundling vulnerable dependencies, we moved minification to PHP using a
-> lightweight, secure implementation.
+> **Why PHP-based minification?** MJML 5 no longer uses the old vulnerable `html-minifier` package. This package still
+> keeps minification in PHP to preserve the output behavior introduced in version 2.x. If you need MJML 5's native
+> htmlnano/cssnano minification options, open an issue with the required option shape.
 
 ## Validation Level
 
@@ -235,8 +240,10 @@ Our package will validate the MJML using the `soft` validation level by default.
 
 ## File Path
 
-Our package will use the `.` directory by default. You may change this by using calling the `filePath(string $path)`
-method.
+Our package will use the `.` directory by default. You may change this by calling the `filePath(string $path)` method.
+
+MJML 5 treats `filePath` as the include sandbox base. If includes are enabled, paths outside `filePath` are denied unless
+they are explicitly allowed with `includePath(string|array|null $path)`.
 
 ## Juice
 
