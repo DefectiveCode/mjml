@@ -10,8 +10,16 @@ jobs:
             matrix:
                 os: [ubuntu-latest]
                 php: [8.4, 8.5]
+                laravel: [12, 13]
+                include:
+                    - laravel: 12
+                      laravel_constraint: ^12.40
+                      testbench_constraint: ^10.0
+                    - laravel: 13
+                      laravel_constraint: ^13.1.1
+                      testbench_constraint: ^11.0
 
-        name: P${{ matrix.php }} - ${{ matrix.os }}
+        name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }}
 
         steps:
             - name: Checkout code
@@ -29,8 +37,11 @@ jobs:
                   echo "::add-matcher::${{ runner.tool_cache }}/php.json"
                   echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+            - name: Configure Laravel dependencies
+              run: composer require --dev "laravel/framework:${{ matrix.laravel_constraint }}" "orchestra/testbench:${{ matrix.testbench_constraint }}" --no-update
+
             - name: Install dependencies
-              run: composer update --prefer-dist --no-interaction
+              run: composer update --prefer-dist --no-interaction --with-all-dependencies
 
             - name: Execute tests
               run: vendor/bin/phpunit
