@@ -83,7 +83,7 @@ MJML::minify()->render(
 To render MJML, simply pass your MJML string to the `render` method:
 
 ```php
-use DefectiveCode\MJML;
+use DefectiveCode\MJML\MJML;
 
 $html = (new MJML)->render(
     '<mjml><mj-body><mj-section><mj-column><mj-text>Hello World</mj-text></mj-column></mj-section></mj-body></mjml>'
@@ -95,7 +95,7 @@ $html = (new MJML)->render(
 To validate MJML, simply pass your MJML string to the `isValid` method:
 
 ```php
-use DefectiveCode\MJML;
+use DefectiveCode\MJML\MJML;
 
 $isValid = (new MJML)->isValid(
     '<mjml><mj-body><mj-section><mj-column><mj-text>Hello World</mj-text></mj-column></mj-section></mj-body></mjml>'
@@ -144,7 +144,7 @@ file are past to the `config` object when you use the MJML facade.
 All configuration options can be set by calling the following methods directly on the MJML object.
 
 ```php
-use DefectiveCode\MJML;
+use DefectiveCode\MJML\MJML;
 
 $html = (new MJML)
     ->setMinify(true)
