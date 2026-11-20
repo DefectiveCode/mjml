@@ -23,5 +23,15 @@ jobs:
             - name: Prettier
               run: bunx prettier --check "{!(vendor|node_modules)/**/*,*}.{js,ts,jsx,tsx,vue,xml,json,blade.php,css,md,yml,html}"
 
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.4
+                  extensions: mbstring
+                  coverage: none
+
+            - name: Install dependencies
+              run: composer update --prefer-dist --no-interaction
+
             - name: Pint
-              uses: aglipanci/laravel-pint-action@2.6
+              run: vendor/bin/pint --test
