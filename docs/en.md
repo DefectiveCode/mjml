@@ -68,6 +68,14 @@ MJML::minify()->render(
     | Linux (musl)     | arm64        | `DefectiveCode\MJML\PullBinary::linux-arm64-musl` |
     | Linux (musl)     | x64          | `DefectiveCode\MJML\PullBinary::linux-x64-musl`   |
 
+    > The musl binaries require the `libstdc++` and `libgcc` shared libraries, which minimal musl images such as Alpine
+    > don't include. Without them, the binary exits with `Error loading shared library libstdc++.so.6`. On Alpine,
+    > install them with `apk add libstdc++ libgcc`, for example in your Dockerfile:
+    >
+    > ```dockerfile
+    > RUN apk add --no-cache libstdc++ libgcc
+    > ```
+
 2. Next, install the PHP package by running the following composer command:
     ```bash
     composer require defectivecode/mjml
