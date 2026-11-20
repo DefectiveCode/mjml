@@ -360,13 +360,30 @@ class MJMLTest extends TestCase
         $mjml->shouldReceive('exec')
             ->once()
             ->andReturn([
-                '<html>    <body>   <p>Hello</p>   </body>    </html>',
+                '  <html>    <body>   <p>Hello   world</p>   </body>    </html>  ',
                 0,
             ]);
 
         $result = $mjml->minify()->render($this->validMjml);
 
-        $this->assertEquals('<html><body><p>Hello</p></body></html>', $result);
+        $this->assertSame('<html> <body> <p>Hello world</p> </body> </html>', $result);
+    }
+
+    #[Test]
+    public function itPreservesWordSeparatorsBetweenInlineTagsWhenMinifying(): void
+    {
+        $mjml = $this->mockShellCall();
+
+        $mjml->shouldReceive('exec')
+            ->once()
+            ->andReturn([
+                "<p><em>Starts</em> \n  <a href=\"https://example.com\">here</a></p><p><strong>RS</strong><em>VP</em></p>",
+                0,
+            ]);
+
+        $result = $mjml->minify()->render($this->validMjml);
+
+        $this->assertSame('<p><em>Starts</em> <a href="https://example.com">here</a></p><p><strong>RS</strong><em>VP</em></p>', $result);
     }
 
     #[Test]
