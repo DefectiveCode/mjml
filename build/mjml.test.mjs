@@ -85,6 +85,22 @@ test('renders includes when explicitly enabled', async () => {
     expect(result.stderr).toBe('');
 });
 
+test('renders without a denied include under strict validation', async () => {
+    const sandbox = createTempDirectory();
+    const outside = createTempDirectory();
+
+    writeFileSync(join(outside, 'secret.mjml'), '<mj-text>Private Include</mj-text>');
+
+    const result = await runMjml([
+        mjmlInclude(join(outside, 'secret.mjml')),
+        JSON.stringify({ filePath: sandbox, ignoreIncludes: false, validationLevel: 'strict' }),
+    ]);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).not.toContain('Private Include');
+    expect(result.stderr).toBe('');
+});
+
 test('fails when no MJML content is provided', async () => {
     const result = await runMjml([]);
 

@@ -196,7 +196,7 @@ allow additional include directories.
 
 ## Beautify
 
-Our package will beautify the HTML using [`js-beautify`](https://www.npmjs.com/package/js-beautify). MJML 5.2 also uses
+Our package will beautify the HTML using [`js-beautify`](https://www.npmjs.com/package/js-beautify). MJML 5 also uses
 `js-beautify` internally, but this package keeps wrapper-level beautification so custom PHP `beautifyOptions` continue to
 work. The default options are:
 
