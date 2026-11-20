@@ -87,12 +87,10 @@ test('renders includes when explicitly enabled', async () => {
 
 test('renders without a denied include under strict validation', async () => {
     const sandbox = createTempDirectory();
-    const outside = createTempDirectory();
-
-    writeFileSync(join(outside, 'secret.mjml'), '<mj-text>Private Include</mj-text>');
+    const deniedInclude = createTempIncludeFile('Private Include');
 
     const result = await runMjml([
-        mjmlInclude(join(outside, 'secret.mjml')),
+        mjmlInclude(deniedInclude),
         JSON.stringify({ filePath: sandbox, ignoreIncludes: false, validationLevel: 'strict' }),
     ]);
 
