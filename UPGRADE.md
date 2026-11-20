@@ -1,5 +1,15 @@
 # Upgrade Guide
 
+## Upgrading from 3.0 to 3.1
+
+This release upgrades the bundled MJML renderer from MJML 5.2.1 to MJML 5.4.1. No PHP API changes are required.
+
+1. `mj-section` supports a `gutter` attribute for spacing between columns.
+2. `mj-social-element` supports a `border` attribute.
+3. Strict validation no longer crashes when an `mj-include` is denied; the denied include is skipped and the rest of the
+   template renders.
+4. Upstream dependency security fixes from MJML 5.3.0 and 5.4.1.
+
 ## Upgrading from 2.x to 3.x
 
 ### MJML 5
