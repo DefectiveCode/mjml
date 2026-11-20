@@ -43,7 +43,7 @@ This package continues to use the PHP minifier introduced in 2.x. MJML 5 no long
 release as the MJML major upgrade.
 
 `minifyOptions` remains unavailable. The package minifier removes HTML comments when comments are disabled, preserves
-Outlook conditionals, collapses whitespace, and removes whitespace between tags.
+Outlook conditionals, and collapses whitespace without removing word separators between inline tags.
 
 ### Build Changes
 

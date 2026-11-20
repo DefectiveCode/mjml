@@ -44,8 +44,8 @@ return [
 
     /**
      * Enable or disable minification of the HTML output.
-     * Minification removes comments (except Outlook conditionals), collapses whitespace,
-     * and removes whitespace between tags.
+     * Minification can remove comments (except Outlook conditionals) and collapses
+     * whitespace without removing word separators between inline tags.
      */
     'minify' => true,
 

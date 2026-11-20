@@ -158,8 +158,8 @@ Our package follows the [same configuration](https://documentation.mjml.io/) as 
 except for the following:
 
 - `preprocessors` - This option is not available. Please open a pull request if you would like to add this option.
-- `minifyOptions` - We keep minification in PHP for output compatibility. The minifier removes comments (except Outlook
-  conditionals), collapses whitespace, and removes whitespace between tags.
+- `minifyOptions` - The PHP minifier collapses whitespace and can remove comments (except Outlook conditionals). Spaces
+  separating inline tags are preserved.
 - `sanitizeStyles`, `templateSyntax`, and `allowMixedSyntax` - These MJML 5 options apply to MJML's native
   htmlnano/cssnano minification path. They are not used by this package's PHP minifier.
 
@@ -221,7 +221,7 @@ Our package will minify the HTML output when enabled. Minification performs the 
 
 - Removes HTML comments (preserves Outlook conditional comments like `<!--[if mso]>`)
 - Collapses multiple whitespace characters into single spaces
-- Removes whitespace between HTML tags
+- Preserves word separators between inline tags
 
 You may enable or disable minification by calling the `minify(bool $minify)` method.
 
