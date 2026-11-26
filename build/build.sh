@@ -15,7 +15,7 @@ prompt_version() {
 bundle() {
     rm -f ./build/mjml-bundled.js
     echo "Pre-bundling..."
-    bun build ./build/mjml.mjs --outfile=./build/mjml-bundled.js --target=bun --format=iife --packages=bundle --minify
+    bun build ./build/mjml.ts --outfile=./build/mjml-bundled.js --target=bun --format=iife --packages=bundle --minify
 }
 
 build_macos() {

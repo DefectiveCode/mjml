@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DefectiveCode\MJML\Tests;
 
+use Mockery;
 use Exception;
 use TypeError;
 use Mockery\MockInterface;
@@ -36,7 +37,7 @@ class MJMLTest extends TestCase
 
         $mjml->shouldReceive('exec')
             ->once()
-            ->withArgs(function ($args): bool {
+            ->withArgs(function (string $args): bool {
                 return str_contains($args, $this->validMjml) && ! str_contains($args, '--mjml-file=');
             })
             ->andReturn([
@@ -56,7 +57,7 @@ class MJMLTest extends TestCase
 
         $mjml->shouldReceive('exec')
             ->once()
-            ->withArgs(function ($args) use ($largeMjml, &$inputFile): bool {
+            ->withArgs(function (string $args) use ($largeMjml, &$inputFile): bool {
                 if (str_contains($args, $largeMjml)) {
                     return false;
                 }
@@ -89,7 +90,7 @@ class MJMLTest extends TestCase
 
         $mjml->shouldReceive('exec')
             ->once()
-            ->withArgs(function ($args) use ($thresholdMjml): bool {
+            ->withArgs(function (string $args) use ($thresholdMjml): bool {
                 return str_contains($args, $thresholdMjml) && ! str_contains($args, '--mjml-file=');
             })
             ->andReturn([
@@ -110,7 +111,7 @@ class MJMLTest extends TestCase
 
         $mjml->shouldReceive('exec')
             ->once()
-            ->withArgs(function ($args) use ($aboveThresholdMjml, &$inputFile): bool {
+            ->withArgs(function (string $args) use ($aboveThresholdMjml, &$inputFile): bool {
                 if (str_contains($args, $aboveThresholdMjml)) {
                     return false;
                 }
@@ -144,7 +145,7 @@ class MJMLTest extends TestCase
 
         $mjml->shouldReceive('exec')
             ->once()
-            ->withArgs(function ($args) use (&$inputFile): bool {
+            ->withArgs(function (string $args) use (&$inputFile): bool {
                 if (! preg_match("/'--mjml-file=([^']+)'/", $args, $matches)) {
                     return false;
                 }
@@ -177,6 +178,7 @@ class MJMLTest extends TestCase
         $largeMjml = $this->largeMjml();
         $inputFile = tempnam(sys_get_temp_dir(), 'mjml_input');
         $handle = fopen(__FILE__, 'r');
+        $this->assertIsResource($handle);
         $exceptionThrown = false;
         $config = new Config;
         $config->fonts = [$handle];
@@ -259,7 +261,7 @@ class MJMLTest extends TestCase
 
         $mjml->shouldReceive('exec')
             ->once()
-            ->withArgs(function ($args): bool {
+            ->withArgs(function (string $args): bool {
                 return str_contains($args, (new Config)->toJson());
             })
             ->andReturn([
@@ -279,7 +281,7 @@ class MJMLTest extends TestCase
 
         $mjml->shouldReceive('exec')
             ->once()
-            ->withArgs(function ($args): bool {
+            ->withArgs(function (string $args): bool {
                 return str_contains($args, (new Config)->toJson());
             })
             ->andReturn([
@@ -308,7 +310,7 @@ class MJMLTest extends TestCase
 
         $mjml->shouldReceive('exec')
             ->once()
-            ->withArgs(function ($args): bool {
+            ->withArgs(function (string $args): bool {
                 return str_contains($args, (new Config)->toJson());
             })
             ->andReturn([
@@ -331,11 +333,12 @@ class MJMLTest extends TestCase
         $this->assertSame('/tmp/includes', $mjml->getConfig()->includePath);
     }
 
+    /** @return MJML&MockInterface */
     protected function mockShellCall(?Config $config = null): MockInterface
     {
-        $mjml = $this->mock(MJML::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $mjml = Mockery::mock(MJML::class);
+        $mjml->makePartial();
+        $mjml->shouldAllowMockingProtectedMethods();
 
         $mjml->setConfig($config ?? new Config);
 

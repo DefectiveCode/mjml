@@ -1,5 +1,13 @@
 # Upgrade Guide
 
+## Upgrading from 3.x to 4.x
+
+This release raises the platform requirements. The bundled MJML renderer is unchanged.
+
+1. PHP 8.5 or newer is required. PHP 8.4 is no longer supported.
+2. Laravel 12 (`illuminate/support` 12.11 or newer) and Laravel 13 are supported.
+3. The bundled binaries are now built with `js-beautify` 2.
+
 ## Upgrading from 3.0 to 3.1
 
 This release upgrades the bundled MJML renderer from MJML 5.2.1 to MJML 5.4.1. No PHP API changes are required.

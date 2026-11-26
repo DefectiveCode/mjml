@@ -5,21 +5,23 @@ declare(strict_types=1);
 namespace DefectiveCode\MJML;
 
 use Exception;
+use TypeError;
+use RuntimeException;
 use Illuminate\Support\Traits\ForwardsCalls;
 
 /**
  * @method MJML addFont(string $font, string $url)
  * @method MJML removeFont(string $font)
- * @method MJML setFonts(array $fonts)
+ * @method MJML setFonts(array<string, string> $fonts)
  * @method MJML addBeautifyOption(string $option, mixed $value)
  * @method MJML removeBeautifyOption(string $option)
- * @method MJML setBeautifyOptions(array $options)
+ * @method MJML setBeautifyOptions(array<string, mixed> $options)
  * @method MJML addJuiceOption(string $option, mixed $value)
  * @method MJML removeJuiceOption(string $option)
- * @method MJML setJuiceOptions(array $options)
+ * @method MJML setJuiceOptions(array<string, mixed> $options)
  * @method MJML addJuicePreserveTag(string $tag, mixed $value)
  * @method MJML removeJuicePreserveTag(string $tag)
- * @method MJML setJuicePreserveTags(array $tags)
+ * @method MJML setJuicePreserveTags(array<string, mixed> $tags)
  * @method MJML keepComments()
  * @method MJML removeComments()
  * @method MJML ignoreIncludes(bool $ignoreIncludes = true)
@@ -27,7 +29,7 @@ use Illuminate\Support\Traits\ForwardsCalls;
  * @method MJML minify(bool $minify = true)
  * @method MJML validationLevel(ValidationLevel $validationLevel)
  * @method MJML filePath(string $filePath = '.')
- * @method MJML includePath(string|array|null $includePath = null)
+ * @method MJML includePath(string|array<string>|null $includePath = null)
  */
 class MJML
 {
@@ -85,10 +87,11 @@ class MJML
     protected function minifyHtml(string $html, bool $keepComments = true): string
     {
         if (! $keepComments) {
-            $html = preg_replace('/<!--(?![<\[])(?!.*?(?:\[if|endif)).*?-->/s', '', $html);
+            $html = preg_replace('/<!--(?![<\[])(?!.*?(?:\[if|endif)).*?-->/s', '', $html)
+                ?? throw new RuntimeException(preg_last_error_msg());
         }
 
-        $html = preg_replace('/\s+/', ' ', $html);
+        $html = preg_replace('/\s+/', ' ', $html) ?? throw new RuntimeException(preg_last_error_msg());
 
         return trim($html);
     }
@@ -149,9 +152,12 @@ class MJML
         return $this;
     }
 
+    /** @param array<mixed> $parameters */
     public function __call(string $method, array $parameters): self
     {
-        return $this->forwardDecoratedCallTo($this->config, $method, $parameters);
+        $result = $this->forwardDecoratedCallTo($this->config, $method, $parameters);
+
+        return $result instanceof self ? $result : throw new TypeError("Method {$method} is not chainable.");
     }
 
     /**
@@ -165,8 +171,10 @@ class MJML
 
         exec("{$binary} {$arguments} > {$output} 2>&1", result_code: $code);
 
+        $contents = file_get_contents($output);
+
         return [
-            file_get_contents($output),
+            $contents === false ? throw new RuntimeException('Unable to read MJML output file.') : $contents,
             $code,
         ];
     }

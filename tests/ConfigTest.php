@@ -146,8 +146,8 @@ class ConfigTest extends TestCase
     {
         $this->expectException(BadMethodCallException::class);
 
-        (new Config)->setFoo();
-        (new Config)->addFooOption('bar', 'baz');
-        (new Config)->removeFooOption('bar');
+        (new Config)->__call('setFoo', []);
+        (new Config)->__call('addFooOption', ['bar', 'baz']);
+        (new Config)->__call('removeFooOption', ['bar']);
     }
 }

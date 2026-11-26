@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DefectiveCode\MJML\Tests;
 
 use ReflectionClass;
+use ReflectionMethod;
 use RuntimeException;
 use DefectiveCode\MJML\PullBinary;
 use PHPUnit\Framework\Attributes\Test;
@@ -37,6 +38,7 @@ class PullBinaryTest extends TestCase
         }
     }
 
+    /** @param non-empty-string $expectedSuffix */
     #[Test]
     #[DataProvider('binaryPathProvider')]
     public function itResolvesBinaryPath(string $os, string $arch, string $expectedSuffix): void
@@ -47,6 +49,7 @@ class PullBinaryTest extends TestCase
         $this->assertStringContainsString('/bin/', $path);
     }
 
+    /** @return array<string, array{string, string, string}> */
     public static function binaryPathProvider(): array
     {
         return [
@@ -70,6 +73,7 @@ class PullBinaryTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /** @return array<string, array{string, string}> */
     public static function architectureProvider(): array
     {
         return [
@@ -102,6 +106,7 @@ class PullBinaryTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /** @return array<string, array{string, string}> */
     public static function operatingSystemProvider(): array
     {
         return [
@@ -141,6 +146,7 @@ class PullBinaryTest extends TestCase
 
         $version = PullBinary::getVersion();
 
+        $this->assertIsString($url);
         $this->assertStringStartsWith(PullBinary::BASE_DOWNLOAD_URL.$version.'/mjml-linux-x64', $url);
     }
 
@@ -174,9 +180,10 @@ class PullBinaryTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unsupported binary.');
 
-        PullBinary::{'windows-x64'}();
+        PullBinary::__callStatic('windows-x64', []);
     }
 
+    /** @param array{string, string, ?string} $expected */
     #[Test]
     #[DataProvider('binaryPartsProvider')]
     public function itExtractsBinaryParts(string $binary, array $expected): void
@@ -187,6 +194,7 @@ class PullBinaryTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    /** @return array<string, array{string, array{string, string, ?string}}> */
     public static function binaryPartsProvider(): array
     {
         return [
@@ -208,12 +216,10 @@ class PullBinaryTest extends TestCase
         $this->assertNull($result);
     }
 
-    protected function getProtectedMethod(string $methodName): \ReflectionMethod
+    protected function getProtectedMethod(string $methodName): ReflectionMethod
     {
         $reflection = new ReflectionClass(PullBinary::class);
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
 
-        return $method;
+        return $reflection->getMethod($methodName);
     }
 }

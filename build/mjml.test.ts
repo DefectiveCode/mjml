@@ -3,11 +3,11 @@ import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const createdPaths = [];
+const createdPaths: string[] = [];
 
 afterEach(() => {
     while (createdPaths.length > 0) {
-        const path = createdPaths.pop();
+        const path = createdPaths.pop()!;
 
         if (existsSync(path)) {
             rmSync(path, { force: true, recursive: true });
@@ -140,8 +140,8 @@ test('fails when MJML validation fails', async () => {
     expect(result.stderr).toBe('');
 });
 
-async function runMjml(args) {
-    const process = Bun.spawn(['bun', 'build/mjml.mjs', ...args], {
+async function runMjml(args: string[]) {
+    const process = Bun.spawn(['bun', 'build/mjml.ts', ...args], {
         cwd: import.meta.dir.replace(/\/build$/, ''),
         stderr: 'pipe',
         stdout: 'pipe',
@@ -156,7 +156,7 @@ async function runMjml(args) {
     };
 }
 
-function createTempMjmlFile(text) {
+function createTempMjmlFile(text: string) {
     const directory = createTempDirectory();
     const filePath = join(directory, 'email.mjml');
 
@@ -165,7 +165,7 @@ function createTempMjmlFile(text) {
     return filePath;
 }
 
-function createTempIncludeFile(text) {
+function createTempIncludeFile(text: string) {
     const directory = createTempDirectory();
     const filePath = join(directory, 'header.mjml');
 
@@ -182,11 +182,11 @@ function createTempDirectory() {
     return directory;
 }
 
-function mjml(text) {
+function mjml(text: string) {
     return `<mjml><mj-body><mj-section><mj-column><mj-text>${text}</mj-text></mj-column></mj-section></mj-body></mjml>`;
 }
 
-function mjmlInclude(path) {
+function mjmlInclude(path: string) {
     return `<mjml><mj-body><mj-section><mj-column><mj-include path="${path}" /></mj-column></mj-section></mj-body></mjml>`;
 }
 
