@@ -37,7 +37,7 @@
         "DefectiveCode\\MJML\\MJMLServiceProvider"
       ],
       "aliases": {
-        "MJML": "DefectiveCode\\MJML\\Facade"
+        "MJML": "DefectiveCode\\MJML\\Facades\\MJML"
       }
     }
   },
