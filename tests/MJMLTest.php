@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DefectiveCode\MJML\Tests;
 
-use Mockery;
 use Exception;
 use TypeError;
 use Mockery\MockInterface;
@@ -336,8 +335,7 @@ class MJMLTest extends TestCase
     /** @return MJML&MockInterface */
     protected function mockShellCall(?Config $config = null): MockInterface
     {
-        $mjml = Mockery::mock(MJML::class);
-        $mjml->makePartial();
+        $mjml = $this->partialMock(MJML::class);
         $mjml->shouldAllowMockingProtectedMethods();
 
         $mjml->setConfig($config ?? new Config);

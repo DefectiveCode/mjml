@@ -48,15 +48,21 @@ class MJML
 
     public function isValid(string $mjml): bool
     {
+        $currentValidationLevel = $this->config->validationLevel;
+
         try {
-            $currentValidationLevel = $this->config->validationLevel;
             $this->validationLevel(ValidationLevel::strict);
             $this->render($mjml);
-            $this->validationLevel($currentValidationLevel);
 
             return true;
         } catch (Exception $exception) {
-            return ! str_contains($exception->getMessage(), 'ValidationError');
+            if (str_contains($exception->getMessage(), 'ValidationError')) {
+                return false;
+            }
+
+            throw $exception;
+        } finally {
+            $this->validationLevel($currentValidationLevel);
         }
     }
 

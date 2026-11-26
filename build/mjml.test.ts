@@ -43,13 +43,20 @@ test('passes options to file argument renders', async () => {
 test('maps beautify options before formatting output', async () => {
     const result = await runMjml([
         mjml('Hello Custom Beautify'),
-        '{"beautify":true,"beautifyOptions":{"indentSize":6,"wrapAttributesIndentSize":6,"maxPreserveNewline":0,"preserveNewlines":false}}',
+        '{"beautify":true,"beautifyOptions":{"indentSize":6,"wrapAttributesIndentSize":6,"maxPreserveNewlines":0,"preserveNewlines":false}}',
     ]);
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain('Hello Custom Beautify');
     expect(result.stdout).toContain('\n      <title>');
     expect(result.stderr).toBe('');
+
+    const spaced = '<mjml><mj-body><mj-raw><div>alpha</div>\n\n\n\n<div>omega</div></mj-raw></mj-body></mjml>';
+    const collapsed = await runMjml([spaced, '{"beautify":true,"beautifyOptions":{"preserveNewlines":true}}']);
+    const limited = await runMjml([spaced, '{"beautify":true,"beautifyOptions":{"preserveNewlines":true,"maxPreserveNewlines":2}}']);
+
+    expect(collapsed.stdout).toMatch(/alpha<\/div>\n *<div>omega/);
+    expect(limited.stdout).toMatch(/alpha<\/div>\n\n\n *<div>omega/);
 });
 
 test('strips wrapper-only options before rendering', async () => {

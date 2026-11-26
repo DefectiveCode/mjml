@@ -21,7 +21,7 @@
   ],
   "require": {
     "php": ">=8.5",
-    "illuminate/support": "^12.11 || ^13.0"
+    "illuminate/support": "^12.69.2 || ^13.32"
   },
   "require-dev": {
     "orchestra/testbench": "^10.12 || ^11.3",

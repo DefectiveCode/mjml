@@ -211,7 +211,7 @@ work. The default options are:
 
 - indentSize: 2
 - wrapAttributesIndentSize: 2
-- maxPreserveNewline: 0
+- maxPreserveNewlines: 0
 - preserveNewlines: false
 
 > While `js-beautify` uses snake_case to provide options, you should use camelCase when using our package. We made this

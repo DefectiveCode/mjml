@@ -13,7 +13,7 @@ const optionsInput = args[1] || '{}';
 const defaultBeautifyConfig = {
     indent_size: 2,
     wrap_attributes_indent_size: 2,
-    max_preserve_newline: 0,
+    max_preserve_newlines: 0,
     preserve_newlines: false,
 };
 
