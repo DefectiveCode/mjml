@@ -1,47 +1,52 @@
 {
-    "name": "defectivecode/mjml",
-    "description": "Compile MJML to responsive HTML emails directly in PHP without requiring Node.js. Wraps the official MJML engine with full Laravel integration.",
-    "type": "laravel",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "DefectiveCode\\MJML\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "DefectiveCode\\MJML\\Tests\\": "tests"
-        }
-    },
-    "authors": [
-        {
-            "name": "Corey McCormick",
-            "email": "corey@defectivecode.com"
-        }
-    ],
-    "require": {
-        "php": ">=8.4",
-        "illuminate/support": "^12.0 || ^13.0"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^10.0 || ^11.0",
-        "nunomaduro/collision": "^8.8 || ^9.0",
-        "phpunit/phpunit": "^12.0",
-        "laravel/pint": "^1.25"
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "DefectiveCode\\MJML\\MJMLServiceProvider"
-            ],
-            "aliases": {
-                "MJML": "DefectiveCode\\MJML\\Facade"
-            }
-        }
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "@php vendor/bin/testbench package:discover --ansi"
-        ]
+  "name": "defectivecode/mjml",
+  "description": "Compile MJML to responsive HTML emails directly in PHP without requiring Node.js. Wraps the official MJML engine with full Laravel integration.",
+  "type": "laravel",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "DefectiveCode\\MJML\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DefectiveCode\\MJML\\Tests\\": "tests"
+    }
+  },
+  "authors": [
+    {
+      "name": "Corey McCormick",
+      "email": "corey@defectivecode.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.5",
+    "illuminate/support": "^12.69.2 || ^13.32"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^10.12 || ^11.3",
+    "nunomaduro/collision": "^8.9.6",
+    "phpunit/phpunit": "^13.1",
+    "laravel/pint": "^1.32.3",
+    "phpstan/phpstan": "^2.3.7",
+    "phpstan/phpstan-mockery": "^2.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "DefectiveCode\\MJML\\MJMLServiceProvider"
+      ],
+      "aliases": {
+        "MJML": "DefectiveCode\\MJML\\Facades\\MJML"
+      }
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "@php vendor/bin/testbench package:discover --ansi"
+    ],
+    "test": "vendor/bin/phpunit",
+    "lint": "vendor/bin/pint",
+    "analyse": "vendor/bin/phpstan analyse"
+  }
 }

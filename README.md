@@ -67,6 +67,36 @@ MJML::minify()->render(
 
 You may read the [documentation on our website](https://www.defectivecode.com/packages/mjml/en).
 
+## Development
+
+Use PHP 8.5 or newer, Composer 2, and Bun 1.4.5. Install development dependencies with the discovery hook enabled:
+
+```sh
+composer install
+test -f bun.lock
+bun install --frozen-lockfile
+```
+
+Run the tests and quality checks:
+
+```sh
+composer validate --strict
+composer test
+composer test -- --order-by random
+composer analyse -- --no-progress
+composer lint -- --test
+bun --bun run test
+bun --bun run typecheck
+bun --bun run format:check
+bun --bun run package:check
+```
+
+Replay random test order with the reported seed by adding `--random-order-seed <seed>`. CI checks both lowest and stable Composer dependency resolutions on PHP 8.5 against Laravel 12 and 13, with randomized test order. The lowest resolution installs the oldest releases Composer accepts at or above the `illuminate/support` floors; Composer skips releases with security advisories, so it can run newer releases than those floors.
+
+Use `composer lint` and `bun --bun run format` to apply formatting. Bun is pinned in `package.json`, and formatter scripts force the Bun runtime. Keep `bun.lock` tracked; `composer.lock` remains ignored for independent library dependency resolution.
+
+The renderer lives in `build/mjml.ts`. `build/build.sh` is the release script, not a local compile helper: it prompts for a version and rewrites `VERSION`, builds the platform binaries, signs and notarizes the macOS ARM64 binary, uploads the binaries to the download CDN, and then deletes the local build artifacts, including the binaries in `bin/`.
+
 # License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

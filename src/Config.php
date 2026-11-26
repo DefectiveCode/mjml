@@ -4,25 +4,28 @@ declare(strict_types=1);
 
 namespace DefectiveCode\MJML;
 
+use TypeError;
 use BadMethodCallException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 /**
  * @method Config addFont(string $font, string $url)
  * @method Config removeFont(string $font)
- * @method Config setFonts(array $fonts)
+ * @method Config setFonts(array<string, string> $fonts)
  * @method Config addBeautifyOption(string $option, mixed $value)
  * @method Config removeBeautifyOption(string $option)
- * @method Config setBeautifyOptions(array $options)
+ * @method Config setBeautifyOptions(array<string, mixed> $options)
  * @method Config addJuiceOption(string $option, mixed $value)
  * @method Config removeJuiceOption(string $option)
- * @method Config setJuiceOptions(array $options)
+ * @method Config setJuiceOptions(array<string, mixed> $options)
  * @method Config addJuicePreserveTag(string $tag, mixed $value)
  * @method Config removeJuicePreserveTag(string $tag)
- * @method Config setJuicePreserveTags(array $tags)
+ * @method Config setJuicePreserveTags(array<string, mixed> $tags)
  */
 class Config
 {
+    /** @var array<mixed> */
     public array $fonts = [
         'Open Sans' => 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700',
         'Droid Sans' => 'https://fonts.googleapis.com/css?family=Droid+Sans:300,400,500,700',
@@ -37,10 +40,11 @@ class Config
 
     public bool $beautify = false;
 
+    /** @var array<mixed> */
     public array $beautifyOptions = [
         'indentSize' => 2,
         'wrapAttributesIndentSize' => 2,
-        'maxPreserveNewline' => 0,
+        'maxPreserveNewlines' => 0,
         'preserveNewlines' => false,
     ];
 
@@ -50,18 +54,22 @@ class Config
 
     public string $filePath = '.';
 
+    /** @var string|array<string>|null */
     public string|array|null $includePath = null;
 
+    /** @var array<mixed> */
     public array $juiceOptions = [];
 
+    /** @var array<mixed> */
     public array $juicePreserveTags = [];
 
+    /** @param array<mixed> $config */
     public function __construct(array $config = [])
     {
         $this->validationLevel = ValidationLevel::soft;
 
         foreach ($config as $property => $value) {
-            $property = Str::camel($property);
+            $property = Str::camel((string) $property);
 
             if (property_exists($this, $property)) {
                 $this->{$property} = $value;
@@ -83,7 +91,7 @@ class Config
             'includePath' => $this->includePath,
             'juiceOptions' => $this->juiceOptions,
             'juicePreserveTags' => $this->juicePreserveTags,
-        ]);
+        ]) ?: throw new TypeError(json_last_error_msg());
     }
 
     public function keepComments(): self
@@ -135,6 +143,7 @@ class Config
         return $this;
     }
 
+    /** @param string|array<string>|null $includePath */
     public function includePath(string|array|null $includePath = null): self
     {
         $this->includePath = $includePath;
@@ -142,6 +151,7 @@ class Config
         return $this;
     }
 
+    /** @param array<mixed> $arguments */
     public function __call(string $name, array $arguments): self
     {
         $property = $this->prepareProperty($name);
@@ -151,19 +161,19 @@ class Config
         }
 
         if (str_starts_with($name, 'add')) {
-            return $this->addOption($property, $arguments[0], $arguments[1]);
+            return $this->addOption($property, Arr::string($arguments, 0), $arguments[1]);
         }
 
         if (str_starts_with($name, 'remove')) {
-            return $this->removeOption($property, $arguments[0]);
+            return $this->removeOption($property, Arr::string($arguments, 0));
         }
 
-        return $this->setOptions($property, $arguments[0]);
+        return $this->setOptions($property, Arr::array($arguments, 0));
     }
 
     protected function prepareProperty(string $property): string
     {
-        $property = lcfirst(preg_replace('/^add|remove|set/', '', $property));
+        $property = Str::of($property)->replaceMatches('/^add|remove|set/', '')->lcfirst()->toString();
 
         if (strlen($property) > 0 && substr($property, -1) !== 's') {
             $property .= 's';
@@ -172,6 +182,7 @@ class Config
         return $property;
     }
 
+    /** @param array<mixed> $options */
     protected function setOptions(string $property, array $options): self
     {
         $this->{$property} = $options;
@@ -181,15 +192,17 @@ class Config
 
     protected function addOption(string $property, string $name, mixed $value): self
     {
-        $this->{$property}[$name] = $value;
+        $options = Arr::array(get_object_vars($this), $property);
+        $options[$name] = $value;
 
-        return $this;
+        return $this->setOptions($property, $options);
     }
 
     protected function removeOption(string $property, string $name): self
     {
-        unset($this->{$property}[$name]);
+        $options = Arr::array(get_object_vars($this), $property);
+        unset($options[$name]);
 
-        return $this;
+        return $this->setOptions($property, $options);
     }
 }

@@ -30,6 +30,7 @@ class PullBinary
         return __DIR__."/../bin/mjml-{$operatingSystem}-{$architecture}{$suffix}";
     }
 
+    /** @param array<mixed> $arguments */
     public static function __callStatic(string $name, array $arguments): void
     {
         if ($name === 'all') {
@@ -152,6 +153,6 @@ class PullBinary
             throw new RuntimeException('VERSION file not found.');
         }
 
-        return trim(file_get_contents($versionFile));
+        return trim(file_get_contents($versionFile) ?: throw new RuntimeException('Unable to read VERSION file.'));
     }
 }

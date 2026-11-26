@@ -1,5 +1,16 @@
 # Upgrade Guide
 
+## Upgrading from 3.x to 4.x
+
+This release raises the platform requirements. The MJML engine version is unchanged (5.4.1), but the formatter bundled with it changed to `js-beautify` 2.
+
+1. PHP 8.5 or newer is required. PHP 8.4 is no longer supported.
+2. Laravel 12 (`illuminate/support` 12.69.2 or newer) and Laravel 13 (13.32 or newer) are supported.
+3. `isValid()` returns `false` only for MJML validation errors. Any other rendering failure, such as input MJML cannot parse
+   or a missing binary, now throws instead of returning `true`.
+4. The `maxPreserveNewline` beautify option is now `maxPreserveNewlines`, the name `js-beautify` reads. Rename it in a
+   published `config/mjml.php`. Its default of `0` now applies, so set it above `0` when you enable `preserveNewlines`.
+
 ## Upgrading from 3.0 to 3.1
 
 This release upgrades the bundled MJML renderer from MJML 5.2.1 to MJML 5.4.1. No PHP API changes are required.

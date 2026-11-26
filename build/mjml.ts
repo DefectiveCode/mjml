@@ -13,7 +13,7 @@ const optionsInput = args[1] || '{}';
 const defaultBeautifyConfig = {
     indent_size: 2,
     wrap_attributes_indent_size: 2,
-    max_preserve_newline: 0,
+    max_preserve_newlines: 0,
     preserve_newlines: false,
 };
 
@@ -22,7 +22,7 @@ if (!mjmlInput) {
     process.exit(1);
 }
 
-function resolveMjmlContent(input) {
+function resolveMjmlContent(input: string): string {
     if (!input.startsWith(fileArgumentPrefix)) {
         return input;
     }
@@ -64,7 +64,7 @@ async function render() {
         console.log(htmlOutput);
         process.exit(0);
     } catch (exception) {
-        console.log(exception.message);
+        console.log((exception as Error).message);
         process.exit(1);
     }
 }

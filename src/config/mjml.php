@@ -38,7 +38,7 @@ return [
     'beautify_options' => [
         'indentSize' => 2,
         'wrapAttributesIndentSize' => 2,
-        'maxPreserveNewline' => 0,
+        'maxPreserveNewlines' => 0,
         'preserveNewlines' => false,
     ],
 

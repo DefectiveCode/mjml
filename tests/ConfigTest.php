@@ -31,7 +31,7 @@ class ConfigTest extends TestCase
     public function itReturnsAJsonObjectOfTheConfig(): void
     {
         $this->assertEquals(
-            '{"fonts":{"Open Sans":"https:\/\/fonts.googleapis.com\/css?family=Open+Sans:300,400,500,700","Droid Sans":"https:\/\/fonts.googleapis.com\/css?family=Droid+Sans:300,400,500,700","Lato":"https:\/\/fonts.googleapis.com\/css?family=Lato:300,400,500,700","Roboto":"https:\/\/fonts.googleapis.com\/css?family=Roboto:300,400,500,700","Ubuntu":"https:\/\/fonts.googleapis.com\/css?family=Ubuntu:300,400,500,700"},"keepComments":true,"ignoreIncludes":true,"beautify":false,"beautifyOptions":{"indentSize":2,"wrapAttributesIndentSize":2,"maxPreserveNewline":0,"preserveNewlines":false},"minify":false,"validationLevel":"soft","filePath":".","includePath":null,"juiceOptions":[],"juicePreserveTags":[]}',
+            '{"fonts":{"Open Sans":"https:\/\/fonts.googleapis.com\/css?family=Open+Sans:300,400,500,700","Droid Sans":"https:\/\/fonts.googleapis.com\/css?family=Droid+Sans:300,400,500,700","Lato":"https:\/\/fonts.googleapis.com\/css?family=Lato:300,400,500,700","Roboto":"https:\/\/fonts.googleapis.com\/css?family=Roboto:300,400,500,700","Ubuntu":"https:\/\/fonts.googleapis.com\/css?family=Ubuntu:300,400,500,700"},"keepComments":true,"ignoreIncludes":true,"beautify":false,"beautifyOptions":{"indentSize":2,"wrapAttributesIndentSize":2,"maxPreserveNewlines":0,"preserveNewlines":false},"minify":false,"validationLevel":"soft","filePath":".","includePath":null,"juiceOptions":[],"juicePreserveTags":[]}',
             (new Config)->toJson()
         );
     }
@@ -146,8 +146,8 @@ class ConfigTest extends TestCase
     {
         $this->expectException(BadMethodCallException::class);
 
-        (new Config)->setFoo();
-        (new Config)->addFooOption('bar', 'baz');
-        (new Config)->removeFooOption('bar');
+        (new Config)->__call('setFoo', []);
+        (new Config)->__call('addFooOption', ['bar', 'baz']);
+        (new Config)->__call('removeFooOption', ['bar']);
     }
 }
